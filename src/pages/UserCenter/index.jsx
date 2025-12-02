@@ -3,6 +3,7 @@ import { NavBar, Card, List, Button, Switch } from 'antd-mobile';
 import { useNavigate } from 'react-router-dom';
 import { UserOutline, CheckShieldOutline, MessageOutline, AppOutline, BellOutline, ScanCodeOutline, LocationOutline, StarOutline, QuestionCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import './index.scss';
+import avatar from '../../assets/img/user/avatar.jpg';
 
 const UserCenter = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const UserCenter = () => {
 
   // 模拟用户数据
   const userData = {
-    avatar: 'https://via.placeholder.com/60?text=用户头像',
+    avatar: avatar,
     username: '陈先生',
     phone: '138****8899',
     memberLevel: '高级会员',
