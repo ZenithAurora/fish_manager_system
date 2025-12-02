@@ -1,0 +1,463 @@
+.scanner-container {
+  max-width: 768px;
+  margin: 0 auto;
+  height: 100vh;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部导航栏 */
+.scanner-nav-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: transparent;
+
+  .nav-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .am-navbar-left {
+    color: white;
+  }
+
+  .camera-switch {
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+/* 摄像头预览区域 */
+.camera-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  /* 二维码扫描器容器 */
+  .qr-reader {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    /* 隐藏html5-qrcode库的默认UI */
+    .html5-qrcode-element {
+      display: none;
+    }
+
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+
+    canvas {
+      display: none !important;
+    }
+  }
+}
+
+/* 权限提示 */
+.permission-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+
+  .permission-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+  }
+
+  .permission-text {
+    font-size: 16px;
+    line-height: 1.5;
+
+    small {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .permission-button {
+      background-color: #00a862;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 20px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #009a57;
+      }
+    }
+  }
+}
+
+/* 错误提示 */
+.error-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  background-color: rgba(255, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+
+  .error-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+  }
+
+  .error-text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .retry-button {
+    background-color: #00a862;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #009a57;
+    }
+  }
+}
+
+/* 扫描框覆盖层 */
+.scan-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  .scan-frame {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 300px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* 扫描框角落标记 */
+.scan-frame-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #00a862;
+}
+
+.scan-frame-corner-top-left {
+  top: 0;
+  left: 0;
+  border-top: 3px solid;
+  border-left: 3px solid;
+}
+
+.scan-frame-corner-top-right {
+  top: 0;
+  right: 0;
+  border-top: 3px solid;
+  border-right: 3px solid;
+}
+
+.scan-frame-corner-bottom-left {
+  bottom: 0;
+  left: 0;
+  border-bottom: 3px solid;
+  border-left: 3px solid;
+}
+
+.scan-frame-corner-bottom-right {
+  bottom: 0;
+  right: 0;
+  border-bottom: 3px solid;
+  border-right: 3px solid;
+}
+
+/* 扫描线 */
+.scan-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00a862, transparent);
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.scan-line.scanning {
+  animation: scan 2s linear infinite;
+  opacity: 1;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0;
+  }
+}
+
+/* 扫描提示文本 */
+.scan-hint {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 100%;
+}
+
+/* 底部功能按钮 */
+.scanner-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s;
+  pointer-events: auto;
+
+  &:hover {
+    color: #00a862;
+  }
+}
+
+.control-item.active {
+  color: #00a862;
+}
+
+.control-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: background-color 0.3s;
+}
+
+.control-item.active .control-icon {
+  background-color: #00a862;
+}
+
+.control-item:hover .control-icon {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.control-item.active:hover .control-icon {
+  background-color: #009a57;
+}
+
+.control-text {
+  font-size: 12px;
+}
+
+/* 扫码图标特殊样式 */
+.scan-icon {
+  background-color: #00a862 !important;
+}
+
+/* 摄像头选择器 */
+.camera-selector {
+  max-height: 300px;
+  overflow-y: auto;
+
+  .camera-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.selected {
+      background-color: #e6f7ff;
+      border: 1px solid #1890ff;
+    }
+
+    .camera-icon {
+      font-size: 24px;
+      margin-right: 15px;
+    }
+
+    .camera-info {
+      flex: 1;
+
+      .camera-label {
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .camera-id {
+        font-size: 12px;
+        color: #666;
+        word-break: break-all;
+      }
+    }
+
+    .selected-icon {
+      color: #1890ff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .scan-frame {
+    width: 70%;
+    height: 250px;
+  }
+
+  .scanner-controls {
+    padding: 15px 0;
+  }
+
+  .control-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .scan-hint {
+    font-size: 12px;
+    bottom: -40px;
+  }
+
+  .permission-prompt,
+  .error-prompt {
+    padding: 20px;
+
+    .permission-icon,
+    .error-icon {
+      font-size: 36px;
+    }
+
+    .permission-text,
+    .error-text {
+      font-size: 14px;
+    }
+  }
+}
+
+/* 隐藏默认的滚动条 */
+.scanner-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scanner-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 确保html5-qrcode库的样式正确 */
+#qr-reader {
+  width: 100% !important;
+  height: 100% !important;
+
+  &>div {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
+
+/* 闪光灯按钮（保留样式，未来可能使用） */
+.flash-button {
+  position: absolute;
+  top: -50px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+}
+
+.flash-button.flash-on {
+  background-color: rgba(255, 255, 0, 0.3);
+}

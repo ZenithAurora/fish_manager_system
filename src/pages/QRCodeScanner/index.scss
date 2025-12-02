@@ -1,0 +1,425 @@
+/* 扫描器容器 - 全屏显示 */
+.scanner-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+/* 顶部导航栏 */
+.scanner-nav-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+
+  .nav-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .am-navbar-left {
+    color: white;
+  }
+}
+
+/* 模拟摄像头预览区域 */
+.camera-preview {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 120px);
+  margin-top: 60px;
+
+  /* 模拟摄像头画面 */
+  .simulated-camera {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: radial-gradient(circle at center, #2a2a4a 0%, #1a1a2e 70%);
+    overflow: hidden;
+
+    .camera-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .camera-content {
+        text-align: center;
+        color: white;
+
+        .scanning-indicator {
+          margin-bottom: 30px;
+
+          .scanning-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+
+            span {
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background-color: #00a862;
+              animation: pulse 1.5s infinite ease-in-out;
+
+              &:nth-child(2) {
+                animation-delay: 0.2s;
+              }
+
+              &:nth-child(3) {
+                animation-delay: 0.4s;
+              }
+            }
+          }
+
+          .scanning-text {
+            font-size: 16px;
+            opacity: 0.8;
+          }
+        }
+
+        /* 倒计时显示 */
+        .countdown-display {
+          margin: 30px 0;
+
+          .countdown-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00a862;
+            text-shadow: 0 0 20px rgba(0, 168, 98, 0.5);
+            animation: countdownPulse 1s infinite;
+          }
+
+          .countdown-label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 10px;
+          }
+        }
+
+        /* 扫描成功状态 */
+        .scan-success {
+          margin: 30px 0;
+
+          .success-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            animation: successBounce 0.5s ease-out;
+          }
+
+          .success-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00a862;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 扫描框覆盖层 */
+.scan-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  .scan-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 280px;
+    height: 280px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* 扫描框角落标记 */
+.scan-frame-corner {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-color: #00a862;
+}
+
+.scan-frame-corner-top-left {
+  top: 0;
+  left: 0;
+  border-top: 3px solid;
+  border-left: 3px solid;
+}
+
+.scan-frame-corner-top-right {
+  top: 0;
+  right: 0;
+  border-top: 3px solid;
+  border-right: 3px solid;
+}
+
+.scan-frame-corner-bottom-left {
+  bottom: 0;
+  left: 0;
+  border-bottom: 3px solid;
+  border-left: 3px solid;
+}
+
+.scan-frame-corner-bottom-right {
+  bottom: 0;
+  right: 0;
+  border-bottom: 3px solid;
+  border-right: 3px solid;
+}
+
+/* 扫描线 */
+.scan-line {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00a862, transparent);
+  top: 0;
+  left: 0;
+  opacity: 0;
+  box-shadow: 0 0 10px rgba(0, 168, 98, 0.5);
+}
+
+.scan-line.scanning {
+  animation: scan 2s linear infinite;
+  opacity: 1;
+}
+
+/* 扫描提示文本 */
+.scan-hint {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 16px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
+}
+
+/* 底部操作区域 */
+.scanner-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 25px 0;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  padding: 10px;
+  border-radius: 15px;
+
+  &:hover {
+    color: #00a862;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.control-item.active {
+  color: #00a862;
+  background-color: rgba(0, 168, 98, 0.1);
+}
+
+.control-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  transition: all 0.3s ease;
+}
+
+.control-item.active .control-icon {
+  background-color: #00a862;
+  box-shadow: 0 0 20px rgba(0, 168, 98, 0.4);
+}
+
+.control-item:hover .control-icon {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.control-item.active:hover .control-icon {
+  background-color: #009a57;
+}
+
+.control-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 动画定义 */
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+@keyframes countdownPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes successBounce {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .scan-frame {
+    width: 85%;
+    height: 250px;
+  }
+
+  .scanner-controls {
+    padding: 20px 0;
+  }
+
+  .control-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+
+  .scan-hint {
+    font-size: 14px;
+    bottom: -50px;
+  }
+
+  .camera-content {
+    .countdown-display {
+      .countdown-number {
+        font-size: 42px;
+      }
+
+      .countdown-label {
+        font-size: 13px;
+      }
+    }
+
+    .scan-success {
+      .success-icon {
+        font-size: 56px;
+      }
+
+      .success-text {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+/* 平板设备适配 */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .scan-frame {
+    max-width: 350px;
+    height: 350px;
+  }
+
+  .camera-content {
+    .countdown-display {
+      .countdown-number {
+        font-size: 56px;
+      }
+    }
+  }
+}
+
+/* 隐藏滚动条 */
+.scanner-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scanner-container::-webkit-scrollbar {
+  display: none;
+}

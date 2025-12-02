@@ -1,0 +1,388 @@
+.home-container {
+  max-width: 768px;
+  margin: 0 auto;
+  // max-height: 98vh;
+  // background: linear-gradient(180deg, #f8fdfa 0%, #f0f9f5 100%);
+  overflow: hidden;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 顶部导航栏 */
+.home-nav-bar {
+  background: linear-gradient(135deg, #00a862 0%, #00c853 100%);
+  box-shadow: 0 2px 10px rgba(0, 168, 98, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  /* 强制标题居中 */
+  .am-navbar-title {
+    flex: 1;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 10px;
+    /* 居中对齐 */
+    align-items: center;
+    justify-content: center;
+
+    span {
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+}
+
+/* 搜索栏 */
+.search-bar-container {
+  padding: 10px 2px;
+  background: white;
+
+  .custom-search-bar {
+    background: linear-gradient(135deg, #f8fdfa 0%, #f0f9f5 100%) !important;
+    margin: 0 5px;
+
+    /* 搜索图标样式 */
+    .am-search-cancel,
+    .am-search-clear {
+      padding: 0 16px;
+    }
+  }
+}
+
+/* 轮播图 */
+.banner-section {
+  margin: 0;
+  background-color: white;
+
+  .home-swiper {
+    overflow: hidden;
+
+    .swiper-item {
+      position: relative;
+
+      .banner-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+      }
+
+      .banner-content {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        color: white;
+
+        .banner-subtitle {
+          font-size: 14px;
+          margin: 0;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+  }
+}
+
+/* 功能标签 */
+.feature-tags {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+
+  .tag-item {
+    display: flex;
+    align-items: center;
+    color: #87b743;
+    font-size: 12px;
+
+    .tag-icon {
+      opacity: 0.6;
+      font-size: 12px;
+      margin-right: 2px;
+    }
+  }
+}
+
+/* 功能模块网格 */
+.features-section {
+  background-color: white;
+  padding: 20px 0;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.features-section .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 0 15px;
+}
+
+.features-section .feature-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 12px;
+  cursor: pointer;
+
+  .feature-icon {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 46px;
+      color: white;
+    }
+  }
+
+  .feature-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+    color: #333;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+  }
+}
+
+/* 地图和扫码区域 */
+.map-section {
+  padding: 15px 10px;
+  background: white;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .map-container {
+    position: relative;
+
+    .map-image {
+      width: 100%;
+      height: 320px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 扫码区域 */
+    .scan-actions-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .action-button {
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: active;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        .action-text {
+          margin-top: 4px;
+          font-size: 12px;
+          color: #333;
+          font-weight: 500;
+        }
+      }
+
+      .location-button {
+        position: absolute;
+        left: -80px;
+        bottom: -30px;
+
+        .action-icon-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          background-color: rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          padding: 10px;
+
+          .action-icon {
+            margin: 0 auto;
+            font-size: 30px;
+            color: #4CAF50;
+          }
+        }
+      }
+
+      .service-button {
+        position: absolute;
+        bottom: -30px;
+        right: -80px;
+
+        .action-icon-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          padding: 10px;
+
+          .action-icon {
+            font-size: 30px;
+            color: #2196F3;
+          }
+        }
+      }
+
+      /* 扫码溯源按钮 */
+      .scan-button-container {
+        .scan-button {
+          width: 180px;
+          height: 180px;
+          // 恢复径向渐变背景
+          background: radial-gradient(circle at center, #87b743 50%, #9ac967 100%);
+          opacity: 0.6;
+          border-radius: 50%;
+          padding: 30px 40px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          border: 5px solid #335d68;
+          box-shadow: 0 15px 35px rgba(0, 168, 98, 0.5);
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 168, 98, 0.5);
+          }
+
+          .scan-icon {
+            font-size: 80px;
+            color: white;
+            background: transparent !important;
+          }
+
+          .scan-text {
+            // margin-top: 6px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #272626;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 动画 */
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+
+  50% {
+    top: calc(100% - 3px);
+  }
+
+  100% {
+    top: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 页面加载动画 */
+.home-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 搜索框动画 */
+.search-bar-container {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+/* 轮播图动画 */
+.banner-section {
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+/* 功能模块动画 */
+.features-section {
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+/* 地图区域动画 */
+.map-section {
+  animation: fadeInUp 0.8s ease-out 0.8s both;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .home-nav-bar .am-navbar-title {
+    font-size: 16px;
+  }
+
+  .search-bar-container {
+    padding: 8px;
+  }
+
+  .banner-section {
+    padding: 8px;
+
+    .home-swiper .swiper-item .banner-image {
+      height: 180px;
+    }
+
+    .banner-content {
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+
+      .banner-subtitle {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .features-section .feature-grid-item .feature-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .map-section .map-container .map-image {
+    height: 250px;
+  }
+
+  .scan-button-container .scan-button {
+    padding: 24px;
+  }
+}
+
+/* 底部导航栏占位 */
+.home-container {
+  padding-bottom: 60px;
+}

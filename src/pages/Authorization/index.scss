@@ -1,0 +1,147 @@
+/* 授权页面样式 */
+.authorization-container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.authorization-content {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* 应用信息样式 */
+.app-info {
+  margin-bottom: 30px;
+}
+
+.app-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 0 auto 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* 授权信息样式 */
+.auth-info {
+  margin-bottom: 30px;
+}
+
+.auth-text {
+  font-size: 16px;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0 20px;
+}
+
+/* 用户信息样式 */
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--secondary-color);
+  margin-bottom: 40px;
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 16px;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-details {
+  flex: 1;
+  text-align: left;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 4px 0;
+}
+
+.user-tag {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* 按钮样式 */
+.auth-buttons {
+  display: flex;
+  gap: 16px;
+  padding: 0 20px;
+}
+
+.btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:active {
+  background-color: #f5f5f5;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:active {
+  opacity: 0.8;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .auth-buttons {
+    padding: 0 16px;
+  }
+
+  .btn {
+    height: 44px;
+    font-size: 15px;
+  }
+}
