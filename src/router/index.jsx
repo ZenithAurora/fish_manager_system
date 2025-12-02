@@ -8,6 +8,7 @@ import UserCenter from '../pages/UserCenter';
 import Mall from '../pages/Mall';
 import OrderHistory from '../pages/OrderHistory';
 import NodeDetail from '../pages/NodeDetail';
+import ProductDetail from '../pages/ProductDetail';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: '/scan-result', element: <ScannerResult /> },
       { path: '/user', element: <UserCenter /> },
       { path: '/node-detail', element: <NodeDetail /> },
+      { path: '/product-detail', element: <ProductDetail /> },
     ],
   },
 ]);

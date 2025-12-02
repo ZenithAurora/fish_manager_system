@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { SearchOutline, ShopbagOutline, HeartOutline, StarOutline } from 'antd-mobile-icons';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
 
 const Mall = () => {
   const [searchValue, setSearchValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartCount, setCartCount] = useState(3);
+  const navigate = useNavigate();
+
+  // 跳转到商品详情
+  const navigateToProductDetail = (product) => {
+    navigate('/product-detail', {
+      state: {
+        product: {
+          ...product,
+          origin: '四川省江安县',
+          specs: '标准规格',
+          shelfLife: '12个月',
+          batchId: `BATCH-${product.id}-${Date.now()}`,
+          productionDate: new Date().toISOString().split('T')[0],
+          status: '合格',
+          description: `${product.name}，来自优质产地，品质保证，溯源可信。`,
+          detailInfo: `本产品来自四川省江安县优质养殖基地，采用天然饲料养殖，全程可追溯。经过严格的质量检测，确保安全卫生。我们承诺提供最优质的产品和服务，让您买得放心，吃得安心。`
+        }
+      }
+    });
+  };
 
   // 商品分类数据
   const categories = [
@@ -129,7 +150,12 @@ const Mall = () => {
       {/* 商品列表 */}
       <div className="product-list">
         {filteredProducts.map(product => (
-          <div key={product.id} className="product-card">
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => navigateToProductDetail(product)}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="product-image">
               <img src={product.image} alt={product.name} />
               <div className="product-tags">
@@ -141,7 +167,10 @@ const Mall = () => {
               </div>
               <button
                 className={`favorite-btn ${product.isFavorite ? 'active' : ''}`}
-                onClick={() => handleToggleFavorite(product.id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // 阻止冒泡，避免触发商品卡片的点击事件
+                  handleToggleFavorite(product.id);
+                }}
               >
                 <HeartOutline />
               </button>
@@ -162,7 +191,10 @@ const Mall = () => {
               </div>
               <button
                 className="add-cart-btn"
-                onClick={() => handleAddToCart(product.id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // 阻止冒泡，避免触发商品卡片的点击事件
+                  handleAddToCart(product.id);
+                }}
               >
                 加入购物车
               </button>

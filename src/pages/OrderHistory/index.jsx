@@ -1,11 +1,31 @@
 import React, { useState } from 'react';
 import { SearchOutline, MoreOutline, TruckOutline, CheckCircleOutline, ClockCircleOutline, CloseCircleOutline } from 'antd-mobile-icons';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
 
 const OrderHistory = () => {
   const [searchValue, setSearchValue] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const navigate = useNavigate();
+  
+  // 跳转到商品详情
+  const navigateToProductDetail = (item) => {
+    navigate('/product-detail', {
+      state: { 
+        product: {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          specs: item.specs,
+          origin: '四川省江安县',
+          description: `这是${item.name}的详细描述，品质保证，溯源可信。`,
+          detailInfo: `本产品来自优质产地，经过严格的质量检测，确保安全卫生。我们承诺提供最优质的产品和服务，让您买得放心，吃得安心。`
+        }
+      }
+    });
+  };
 
   // 订单状态选项
   const statusOptions = [
@@ -234,14 +254,18 @@ const OrderHistory = () => {
                   {order.items.map(item => (
                     <div key={item.id} className="order-item">
                       <img src={item.image} alt={item.name} className="item-image" />
-                      <div className="item-info">
-                        <h4 className="item-name">{item.name}</h4>
-                        <p className="item-specs">{item.specs}</p>
-                        <div className="item-price">
-                          <span className="price">¥{item.price}</span>
-                          <span className="quantity">x{item.quantity}</span>
-                        </div>
-                      </div>
+                      <div 
+                    className="item-info"
+                    onClick={() => navigateToProductDetail(item)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <h4 className="item-name">{item.name}</h4>
+                    <p className="item-specs">{item.specs}</p>
+                    <div className="item-price">
+                      <span className="price">¥{item.price}</span>
+                      <span className="quantity">x{item.quantity}</span>
+                    </div>
+                  </div>
                     </div>
                   ))}
                 </div>
