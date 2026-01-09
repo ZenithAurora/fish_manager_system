@@ -1,291 +1,301 @@
-// 个人中心页面样式
+// 用户中心页面样式 - 渐变紫色主题
 
 .user-center-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f5f7fa;
+  padding-bottom: 80px;
+}
+
+.user-center-loading {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 16px;
+  color: #666;
 }
 
-// 导航栏样式
-.user-nav-bar {
-  background-color: #007aff;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  .nav-title {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .am-navbar-left-icon {
-    color: #fff;
-  }
-}
-
-// 主内容区域
-.user-content {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-}
-
-// 用户信息卡片
-.user-info-card {
-  margin-bottom: 15px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: none;
-  background: linear-gradient(135deg, #007aff, #0056b3);
-  color: #fff;
-}
-
+// 顶部用户信息区域
 .user-header {
-  display: flex;
-  align-items: center;
-  padding: 20px 15px;
-}
-
-.user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 15px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  position: relative;
+  padding: 60px 20px 30px;
+  
+  .header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 0 0 30px 30px;
+  }
+  
+  .user-info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .avatar-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .user-details {
+    margin-left: 16px;
+    color: #fff;
+    
+    .nickname {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+    
+    .phone {
+      font-size: 14px;
+      margin: 0;
+      opacity: 0.9;
+    }
   }
 }
 
-.user-details {
-  flex: 1;
-}
-
-.user-name-section {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.user-name {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 8px 0 0;
-}
-
-.member-badge {
-  font-size: 11px;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 2px 8px;
-  border-radius: 10px;
-  backdrop-filter: blur(2px);
-}
-
-.user-phone {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
-  margin: 0;
-}
-
-// 统计信息
-.user-stats {
+// 统计数据卡片
+.stats-card {
+  margin: -20px 16px 20px;
+  padding: 20px 10px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   display: flex;
   justify-content: space-around;
-  padding: 15px 0;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(2px);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  flex: 1;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.stat-divider {
-  width: 1px;
-  height: 30px;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-// 功能列表卡片
-.features-card {
-  margin-bottom: 15px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: none;
-}
-
-.features-list {
-  .feature-item {
-    padding: 15px;
-    border-bottom: 1px solid #f0f0f0;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
+  position: relative;
+  z-index: 2;
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 10px;
+    flex: 1;
+    
     &:active {
-      background-color: #f8f9fa;
+      opacity: 0.7;
+    }
+    
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+    }
+  }
+  
+  .stat-divider {
+    width: 1px;
+    height: 30px;
+    background: #eee;
+  }
+}
+
+// 功能入口区域
+.menu-section {
+  margin: 0 16px 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 16px;
+  }
+  
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    
+    &:active {
+      opacity: 0.7;
+    }
+    
+    .menu-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 24px;
+      
+      &.orders {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+      }
+      
+      &.trace {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+      }
+      
+      &.favorites {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #fff;
+      }
+      
+      &.settings {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: #fff;
+      }
+    }
+    
+    .menu-text {
+      font-size: 12px;
+      color: #666;
     }
   }
 }
 
-.feature-icon {
-  color: #007aff;
-  width: 20px;
-  height: 20px;
-}
-
-// 设置选项卡片
-.settings-card {
-  margin-bottom: 20px;
-  border-radius: 12px;
+// 列表功能区域
+.list-section {
+  margin: 0 16px 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: none;
-}
-
-.settings-list {
-  .setting-item {
-    padding: 15px;
-    border-bottom: 1px solid #f0f0f0;
-
+  
+  .list-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    cursor: pointer;
+    transition: background 0.2s;
+    
     &:last-child {
       border-bottom: none;
     }
-
+    
     &:active {
-      background-color: #f8f9fa;
+      background: #f9f9f9;
+    }
+    
+    .list-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #667eea;
+      margin-right: 12px;
+    }
+    
+    .list-text {
+      flex: 1;
+      font-size: 15px;
+      color: #333;
+    }
+    
+    .list-arrow {
+      font-size: 14px;
+      color: #ccc;
     }
   }
-}
-
-.setting-icon {
-  color: #666;
-  width: 20px;
-  height: 20px;
 }
 
 // 退出登录按钮
 .logout-section {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.logout-button {
-  width: 100%;
-  height: 44px;
-  background-color: #fff;
-  color: #ff3b30;
-  border: 1px solid #ff3b30;
-  border-radius: 22px;
-  font-size: 16px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  &:active {
-    background-color: #fff3f3;
+  margin: 30px 16px 20px;
+  
+  .logout-btn {
+    width: 100%;
+    height: 48px;
+    background: #fff;
+    border: 1px solid #ef4444;
+    border-radius: 12px;
+    color: #ef4444;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:active {
+      background: #fef2f2;
+    }
   }
-}
-
-.logout-icon {
-  width: 18px;
-  height: 18px;
 }
 
 // 版本信息
 .version-info {
   text-align: center;
-  font-size: 12px;
-  color: #999;
-  padding: 10px 0;
-}
-
-// 深色模式样式
-.dark-mode {
-  .user-center-container {
-    background-color: #121212;
-  }
-
-  .features-card,
-  .settings-card {
-    background-color: #1e1e1e;
-    color: #f5f5f5;
-  }
-
-  .features-list .feature-item,
-  .settings-list .setting-item {
-    border-bottom: 1px solid #2d2d2d;
-
-    &:active {
-      background-color: #2d2d2d;
-    }
-  }
-
-  .logout-button {
-    background-color: #1e1e1e;
-    color: #ff3b30;
-    border: 1px solid #ff3b30;
-
-    &:active {
-      background-color: #2d2d2d;
-    }
+  padding: 10px 0 20px;
+  
+  span {
+    font-size: 12px;
+    color: #999;
   }
 }
 
-// 响应式设计
-@media (max-width: 375px) {
-  .user-header {
-    flex-direction: column;
-    text-align: center;
+// 响应式适配
+@media (max-width: 360px) {
+  .stats-card {
+    .stat-item {
+      .stat-value {
+        font-size: 16px;
+      }
+    }
   }
-
-  .user-avatar {
-    margin-right: 0;
-    margin-bottom: 12px;
-  }
-
-  .stat-value {
-    font-size: 16px;
-  }
-
-  .stat-label {
-    font-size: 11px;
+  
+  .menu-section {
+    .menu-grid {
+      gap: 12px;
+    }
+    
+    .menu-item {
+      .menu-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+      }
+    }
   }
 }
 
 @media (min-width: 768px) {
   .user-center-container {
-    max-width: 600px;
+    max-width: 500px;
     margin: 0 auto;
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
-    min-height: 100vh;
   }
 }

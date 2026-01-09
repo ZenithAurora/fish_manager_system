@@ -1,220 +1,208 @@
-import React, { useState } from 'react';
-import { SearchOutline, MoreOutline, TruckOutline, CheckCircleOutline, ClockCircleOutline, CloseCircleOutline } from 'antd-mobile-icons';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Toast, Dialog } from 'antd-mobile';
+import { 
+  LeftOutline, 
+  SearchOutline,
+  ScanCodeOutline
+} from 'antd-mobile-icons';
+import { 
+  getOrders, 
+  OrderStatus, 
+  OrderStatusText, 
+  OrderStatusColor, 
+  confirmDelivery, 
+  cancelOrder 
+} from '../../mock/orderData';
 import './index.scss';
 
 const OrderHistory = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [expandedOrder, setExpandedOrder] = useState(null);
   const navigate = useNavigate();
-  
-  // 跳转到商品详情
-  const navigateToProductDetail = (item) => {
-    navigate('/product-detail', {
-      state: { 
-        product: {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          image: item.image,
-          specs: item.specs,
-          origin: '四川省江安县',
-          description: `这是${item.name}的详细描述，品质保证，溯源可信。`,
-          detailInfo: `本产品来自优质产地，经过严格的质量检测，确保安全卫生。我们承诺提供最优质的产品和服务，让您买得放心，吃得安心。`
-        }
-      }
-    });
-  };
+  const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchValue, setSearchValue] = useState('');
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
 
-  // 订单状态选项
-  const statusOptions = [
-    { id: 'all', name: '全部', icon: <MoreOutline /> },
-    { id: 'pending', name: '待付款', icon: <ClockCircleOutline /> },
-    { id: 'paid', name: '待发货', icon: <ClockCircleOutline /> },
-    { id: 'shipped', name: '已发货', icon: <TruckOutline /> },
-    { id: 'completed', name: '已完成', icon: <CheckCircleOutline /> },
-    { id: 'cancelled', name: '已取消', icon: <CloseCircleOutline /> },
+  // 状态筛选选项
+  const statusTabs = [
+    { key: 'all', label: '全部' },
+    { key: OrderStatus.PENDING_PAYMENT, label: '待支付' },
+    { key: OrderStatus.SHIPPING, label: '配送中' },
+    { key: OrderStatus.COMPLETED, label: '已完成' },
   ];
 
-  // 订单数据
-  const orders = [
-    {
-      id: 'ORD20241215001',
-      date: '2024-12-15 14:30',
-      status: 'completed',
-      totalAmount: 298,
-      items: [
-        {
-          id: 1,
-          name: '精品鳗鱼礼包',
-          price: 298,
-          quantity: 1,
-          image: '/src/assets/img/shopping/fish5.webp',
-          specs: '礼盒装 500g'
-        }
-      ],
-      shippingAddress: {
-        name: '张三',
-        phone: '138****1234',
-        address: '北京市朝阳区建国门外大街1号'
-      },
-      trackingNumber: 'SF1234567890'
-    },
-    {
-      id: 'ORD20241214002',
-      date: '2024-12-14 10:15',
-      status: 'shipped',
-      totalAmount: 198,
-      items: [
-        {
-          id: 3,
-          name: '鳗鱼寿司礼盒',
-          price: 198,
-          quantity: 1,
-          image: '/src/assets/img/shopping/fish3.webp',
-          specs: '礼盒装 300g'
-        }
-      ],
-      shippingAddress: {
-        name: '李四',
-        phone: '139****5678',
-        address: '上海市浦东新区陆家嘴金融中心'
-      },
-      trackingNumber: 'YT9876543210'
-    },
-    {
-      id: 'ORD20241213003',
-      date: '2024-12-13 16:45',
-      status: 'paid',
-      totalAmount: 256,
-      items: [
-        {
-          id: 1,
-          name: '优质鳗鱼',
-          price: 128,
-          quantity: 2,
-          image: '/src/assets/img/shopping/fish1.jpg',
-          specs: '鲜活 800g'
-        }
-      ],
-      shippingAddress: {
-        name: '王五',
-        phone: '137****9012',
-        address: '广州市天河区珠江新城'
-      },
-      trackingNumber: null
-    },
-    {
-      id: 'ORD20241212004',
-      date: '2024-12-12 09:20',
-      status: 'pending',
-      totalAmount: 89,
-      items: [
-        {
-          id: 2,
-          name: '冷冻鳗鱼段',
-          price: 89,
-          quantity: 1,
-          image: '/src/assets/img/shopping/fish2.jpg',
-          specs: '冷冻 500g'
-        }
-      ],
-      shippingAddress: {
-        name: '赵六',
-        phone: '136****3456',
-        address: '深圳市南山区科技园'
-      },
-      trackingNumber: null
-    },
-    {
-      id: 'ORD20241211005',
-      date: '2024-12-11 11:30',
-      status: 'cancelled',
-      totalAmount: 136,
-      items: [
-        {
-          id: 4,
-          name: '鳗鱼干',
-          price: 68,
-          quantity: 2,
-          image: '/src/assets/img/shopping/fish4.webp',
-          specs: '袋装 200g'
-        }
-      ],
-      shippingAddress: {
-        name: '钱七',
-        phone: '135****7890',
-        address: '杭州市西湖区文三路'
-      },
-      trackingNumber: null
-    }
-  ];
+  // 加载订单数据
+  const loadOrders = useCallback(() => {
+    const allOrders = getOrders();
+    setOrders(allOrders);
+  }, []);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   // 筛选订单
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchValue.toLowerCase()) ||
-                         order.items.some(item => item.name.toLowerCase().includes(searchValue.toLowerCase()));
-    const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
-    return matchesSearch && matchesStatus;
-  });
+  useEffect(() => {
+    let result = [...orders];
+    
+    // 状态筛选
+    if (activeTab !== 'all') {
+      result = result.filter(order => order.status === activeTab);
+    }
+    
+    // 搜索筛选
+    if (searchValue.trim()) {
+      const keyword = searchValue.toLowerCase();
+      result = result.filter(order => 
+        order.id.toLowerCase().includes(keyword) ||
+        order.items.some(item => item.name.toLowerCase().includes(keyword))
+      );
+    }
+    
+    setFilteredOrders(result);
+  }, [orders, activeTab, searchValue]);
 
-  // 获取状态显示文本和颜色
-  const getStatusInfo = (status) => {
-    const statusMap = {
-      pending: { text: '待付款', color: '#ff9500', bgColor: '#fff6e6' },
-      paid: { text: '待发货', color: '#1890ff', bgColor: '#e6f7ff' },
-      shipped: { text: '已发货', color: '#52c41a', bgColor: '#f6ffed' },
-      completed: { text: '已完成', color: '#52c41a', bgColor: '#f6ffed' },
-      cancelled: { text: '已取消', color: '#ff4d4f', bgColor: '#fff2f0' }
-    };
-    return statusMap[status] || { text: '未知', color: '#999', bgColor: '#f5f5f5' };
+  // 返回上一页
+  const handleBack = () => {
+    navigate(-1);
   };
 
-  const handleToggleExpand = (orderId) => {
-    setExpandedOrder(expandedOrder === orderId ? null : orderId);
+  // 取消订单
+  const handleCancelOrder = async (orderId) => {
+    const result = await Dialog.confirm({
+      content: '确定要取消该订单吗？',
+      confirmText: '确定取消',
+      cancelText: '再想想',
+    });
+    
+    if (result) {
+      const res = cancelOrder(orderId);
+      if (res.success) {
+        Toast.show({ content: '订单已取消', icon: 'success' });
+        loadOrders();
+      } else {
+        Toast.show({ content: res.message, icon: 'fail' });
+      }
+    }
   };
 
-  const handleCancelOrder = (orderId) => {
-    // 这里可以添加取消订单的逻辑
-    alert(`取消订单: ${orderId}`);
+  // 确认收货
+  const handleConfirmDelivery = async (orderId) => {
+    const result = await Dialog.confirm({
+      content: '确认已收到商品？',
+      confirmText: '确认收货',
+      cancelText: '取消',
+    });
+    
+    if (result) {
+      const res = confirmDelivery(orderId);
+      if (res.success) {
+        Toast.show({ content: '已确认收货', icon: 'success' });
+        loadOrders();
+      } else {
+        Toast.show({ content: res.message, icon: 'fail' });
+      }
+    }
   };
 
-  const handleConfirmReceipt = (orderId) => {
-    // 这里可以添加确认收货的逻辑
-    alert(`确认收货: ${orderId}`);
+  // 查看溯源
+  const handleViewTrace = (item) => {
+    if (item.qrCode) {
+      navigate('/scanner-result', { state: { qrCode: item.qrCode } });
+    } else {
+      Toast.show({ content: '该商品暂无溯源信息', icon: 'fail' });
+    }
+  };
+
+  // 展开/收起订单详情
+  const toggleOrderExpand = (orderId) => {
+    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+  };
+
+  // 格式化时间
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
+
+  // 渲染订单操作按钮
+  const renderOrderActions = (order) => {
+    const actions = [];
+    
+    if (order.status === OrderStatus.PENDING_PAYMENT) {
+      actions.push(
+        <button 
+          key="cancel" 
+          className="action-btn cancel"
+          onClick={() => handleCancelOrder(order.id)}
+        >
+          取消订单
+        </button>
+      );
+      actions.push(
+        <button 
+          key="pay" 
+          className="action-btn primary"
+          onClick={() => Toast.show({ content: '支付功能开发中', icon: 'fail' })}
+        >
+          去支付
+        </button>
+      );
+    }
+    
+    if (order.status === OrderStatus.SHIPPING || order.status === OrderStatus.DELIVERED) {
+      actions.push(
+        <button 
+          key="confirm" 
+          className="action-btn primary"
+          onClick={() => handleConfirmDelivery(order.id)}
+        >
+          确认收货
+        </button>
+      );
+    }
+    
+    return actions;
   };
 
   return (
     <div className="order-history-container">
-      {/* 顶部搜索栏 */}
-      <div className="order-header">
-        <div className="search-bar">
+      {/* 顶部导航栏 */}
+      <div className="nav-header">
+        <div className="nav-back" onClick={handleBack}>
+          <LeftOutline />
+        </div>
+        <h1 className="nav-title">订单历史</h1>
+        <div className="nav-placeholder"></div>
+      </div>
+
+      {/* 搜索栏 */}
+      <div className="search-section">
+        <div className="search-box">
           <SearchOutline className="search-icon" />
           <input
             type="text"
-            placeholder="搜索订单号或商品名称..."
+            className="search-input"
+            placeholder="搜索订单号或商品名称"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="search-input"
           />
         </div>
       </div>
 
       {/* 状态筛选 */}
-      <div className="status-filter">
-        <div className="status-scroll">
-          {statusOptions.map(status => (
-            <div
-              key={status.id}
-              className={`status-item ${selectedStatus === status.id ? 'active' : ''}`}
-              onClick={() => setSelectedStatus(status.id)}
-            >
-              <span className="status-icon">{status.icon}</span>
-              <span className="status-name">{status.name}</span>
-            </div>
-          ))}
-        </div>
+      <div className="status-tabs">
+        {statusTabs.map(tab => (
+          <div
+            key={tab.key}
+            className={`tab-item ${activeTab === tab.key ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </div>
+        ))}
       </div>
 
       {/* 订单列表 */}
@@ -222,105 +210,125 @@ const OrderHistory = () => {
         {filteredOrders.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📦</div>
-            <p className="empty-text">暂无订单</p>
+            <p className="empty-title">暂无订单</p>
             <p className="empty-desc">快去商城选购心仪的商品吧</p>
+            <button 
+              className="empty-btn"
+              onClick={() => navigate('/mall')}
+            >
+              去逛逛
+            </button>
           </div>
         ) : (
-          filteredOrders.map(order => {
-            const statusInfo = getStatusInfo(order.status);
-            const isExpanded = expandedOrder === order.id;
-            
-            return (
-              <div key={order.id} className="order-card">
-                {/* 订单头部 */}
-                <div className="order-header-info">
-                  <div className="order-meta">
-                    <span className="order-id">订单号: {order.id}</span>
-                    <span className="order-date">{order.date}</span>
-                  </div>
-                  <div 
-                    className="order-status"
-                    style={{ 
-                      color: statusInfo.color, 
-                      backgroundColor: statusInfo.bgColor 
-                    }}
-                  >
-                    {statusInfo.text}
-                  </div>
-                </div>
+          filteredOrders.map(order => (
+            <div key={order.id} className="order-card">
+              {/* 订单头部 */}
+              <div className="order-header">
+                <span className="order-id">订单号：{order.id}</span>
+                <span 
+                  className="order-status"
+                  style={{ color: OrderStatusColor[order.status] }}
+                >
+                  {OrderStatusText[order.status]}
+                </span>
+              </div>
 
-                {/* 商品信息 */}
-                <div className="order-items">
-                  {order.items.map(item => (
-                    <div key={item.id} className="order-item">
-                      <img src={item.image} alt={item.name} className="item-image" />
+              {/* 商品列表 */}
+              <div className="order-items">
+                {order.items.map((item, idx) => (
+                  <div key={idx} className="item-row">
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="item-image"
+                    />
+                    <div className="item-info">
+                      <h4 className="item-name">{item.name}</h4>
+                      <p className="item-specs">{item.unit}</p>
+                      <div className="item-bottom">
+                        <span className="item-price">¥{item.price}</span>
+                        <span className="item-quantity">x{item.quantity}</span>
+                      </div>
+                    </div>
+                    {item.qrCode && (
                       <div 
-                    className="item-info"
-                    onClick={() => navigateToProductDetail(item)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <h4 className="item-name">{item.name}</h4>
-                    <p className="item-specs">{item.specs}</p>
-                    <div className="item-price">
-                      <span className="price">¥{item.price}</span>
-                      <span className="quantity">x{item.quantity}</span>
-                    </div>
-                  </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 订单总计 */}
-                <div className="order-total">
-                  <span>共{order.items.reduce((sum, item) => sum + item.quantity, 0)}件商品</span>
-                  <span className="total-amount">合计: ¥{order.totalAmount}</span>
-                </div>
-
-                {/* 操作按钮 */}
-                <div className="order-actions">
-                  {order.status === 'pending' && (
-                    <button 
-                      className="btn btn-cancel"
-                      onClick={() => handleCancelOrder(order.id)}
-                    >
-                      取消订单
-                    </button>
-                  )}
-                  {order.status === 'shipped' && (
-                    <button 
-                      className="btn btn-confirm"
-                      onClick={() => handleConfirmReceipt(order.id)}
-                    >
-                      确认收货
-                    </button>
-                  )}
-                  <button 
-                    className="btn btn-detail"
-                    onClick={() => handleToggleExpand(order.id)}
-                  >
-                    {isExpanded ? '收起详情' : '查看详情'}
-                  </button>
-                </div>
-
-                {/* 订单详情 */}
-                {isExpanded && (
-                  <div className="order-details">
-                    <div className="detail-section">
-                      <h5>收货信息</h5>
-                      <p>{order.shippingAddress.name} {order.shippingAddress.phone}</p>
-                      <p>{order.shippingAddress.address}</p>
-                    </div>
-                    {order.trackingNumber && (
-                      <div className="detail-section">
-                        <h5>物流信息</h5>
-                        <p>快递单号: {order.trackingNumber}</p>
+                        className="trace-btn"
+                        onClick={() => handleViewTrace(item)}
+                      >
+                        <ScanCodeOutline />
+                        <span>溯源</span>
                       </div>
                     )}
                   </div>
-                )}
+                ))}
               </div>
-            );
-          })
+
+              {/* 订单金额 */}
+              <div className="order-amount">
+                <span className="amount-label">
+                  共{order.items.reduce((sum, item) => sum + item.quantity, 0)}件商品
+                </span>
+                <span className="amount-value">
+                  合计：<em>¥{order.totalAmount.toFixed(2)}</em>
+                </span>
+              </div>
+
+              {/* 订单时间 */}
+              <div 
+                className="order-time"
+                onClick={() => toggleOrderExpand(order.id)}
+              >
+                <span>下单时间：{formatDate(order.createdAt)}</span>
+                <span className="expand-hint">
+                  {expandedOrderId === order.id ? '收起详情' : '查看详情'}
+                </span>
+              </div>
+
+              {/* 展开详情 */}
+              {expandedOrderId === order.id && (
+                <div className="order-details">
+                  {order.address && (
+                    <div className="detail-item">
+                      <span className="detail-label">收货地址：</span>
+                      <span className="detail-value">
+                        {order.address.name} {order.address.phone}<br />
+                        {order.address.address}
+                      </span>
+                    </div>
+                  )}
+                  {order.paidAt && (
+                    <div className="detail-item">
+                      <span className="detail-label">支付时间：</span>
+                      <span className="detail-value">{formatDate(order.paidAt)}</span>
+                    </div>
+                  )}
+                  {order.shippedAt && (
+                    <div className="detail-item">
+                      <span className="detail-label">发货时间：</span>
+                      <span className="detail-value">{formatDate(order.shippedAt)}</span>
+                    </div>
+                  )}
+                  {order.completedAt && (
+                    <div className="detail-item">
+                      <span className="detail-label">完成时间：</span>
+                      <span className="detail-value">{formatDate(order.completedAt)}</span>
+                    </div>
+                  )}
+                  {order.remark && (
+                    <div className="detail-item">
+                      <span className="detail-label">订单备注：</span>
+                      <span className="detail-value">{order.remark}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 操作按钮 */}
+              <div className="order-actions">
+                {renderOrderActions(order)}
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>

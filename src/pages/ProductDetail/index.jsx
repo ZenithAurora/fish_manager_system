@@ -1,289 +1,273 @@
 import React, { useState, useEffect } from 'react';
-import { NavBar, Button, Card, Toast, Badge } from 'antd-mobile';
+import { NavBar, Button, Toast, Stepper, Popup } from 'antd-mobile';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { HeartOutline, CheckCircleOutline } from 'antd-mobile-icons';
 import './index.scss';
+
+// 导入Mock数据
+import { addToCart, getItemQuantity } from '../../mock/cartData';
+import { getTraceByFishId, getTraceStats } from '../../mock/traceData';
 
 const ProductDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [productData, setProductData] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showSpec, setShowSpec] = useState(false);
+  const [traceStats, setTraceStats] = useState(null);
 
-  // 从路由参数获取商品数据
+  // 获取商品数据
   useEffect(() => {
-    const product = location.state?.product;
-    if (product) {
-      setProductData(product);
-      // 检查是否已收藏
+    const productData = location.state?.product;
+    if (productData) {
+      setProduct(productData);
+      // 获取溯源统计
+      const stats = getTraceStats(productData.id);
+      setTraceStats(stats);
+      // 检查收藏状态
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-      setIsFavorite(favorites.some(item => item.id === product.id));
+      setIsFavorite(favorites.some(item => item.id === productData.id));
     } else {
-      // 如果没有商品数据，显示错误并返回
-      Toast.show({
-        content: '商品信息加载失败',
-        duration: 2000,
-      });
-      setTimeout(() => navigate(-1), 2000);
+      Toast.show({ content: '商品信息加载失败', icon: 'fail' });
+      setTimeout(() => navigate(-1), 1500);
     }
   }, [location.state, navigate]);
 
-  // 处理返回
+  // 返回
   const handleBack = () => {
     navigate(-1);
   };
 
-  // 处理收藏/取消收藏
+  // 收藏
   const handleFavorite = () => {
-    const newFavoriteStatus = !isFavorite;
-    setIsFavorite(newFavoriteStatus);
-
-    // 更新收藏数据
     let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-
-    if (newFavoriteStatus) {
-      favorites.push(productData);
-      Toast.show({
-        content: '收藏成功',
-        duration: 1500,
-      });
+    if (isFavorite) {
+      favorites = favorites.filter(item => item.id !== product.id);
+      Toast.show({ content: '已取消收藏' });
     } else {
-      favorites = favorites.filter(item => item.id !== productData.id);
-      Toast.show({
-        content: '已取消收藏',
-        duration: 1500,
-      });
+      favorites.push(product);
+      Toast.show({ content: '收藏成功', icon: 'success' });
     }
-
     localStorage.setItem('favorites', JSON.stringify(favorites));
+    setIsFavorite(!isFavorite);
   };
 
-  // 处理加入购物车
+  // 加入购物车
   const handleAddToCart = () => {
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-
-    // 检查商品是否已在购物车中
-    const existingItemIndex = cart.findIndex(item => item.id === productData.id);
-
-    if (existingItemIndex >= 0) {
-      // 如果已存在，增加数量
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      // 如果不存在，添加新商品
-      cart.push({
-        ...productData,
-        quantity: quantity
-      });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    Toast.show({
-      content: '已加入购物车',
-      duration: 1500,
-    });
+    addToCart(product, quantity);
+    Toast.show({ content: '已加入购物车', icon: 'success' });
+    setShowSpec(false);
   };
 
-  // 处理立即购买
+  // 立即购买
   const handleBuyNow = () => {
-    // 将当前商品添加到购物车
-    handleAddToCart();
-    // 可以跳转到订单确认页面
-    Toast.show({
-      content: '即将跳转到订单确认页面',
-      duration: 2000,
-    });
+    addToCart(product, quantity);
+    Toast.show({ content: '即将跳转结算页面', icon: 'loading' });
+    setShowSpec(false);
   };
 
-  // 处理分享
-  const handleShare = () => {
-    Toast.show({
-      content: '分享功能暂未实现',
-      duration: 1500,
-    });
+  // 查看溯源
+  const handleViewTrace = () => {
+    // 存储商品信息用于溯源结果页
+    localStorage.setItem('currentScanProduct', JSON.stringify(product));
+    navigate('/scan-result');
   };
 
-  // 数量增减
-  const handleQuantityChange = (change) => {
-    const newQuantity = quantity + change;
-    if (newQuantity > 0 && newQuantity <= 99) {
-      setQuantity(newQuantity);
-    }
-  };
-
-  if (!productData) {
+  if (!product) {
     return (
-      <div className="product-detail-container">
+      <div className="product-detail-page">
         <NavBar onBack={handleBack}>商品详情</NavBar>
-        <div className="loading-content">
-          <div className="loading-text">加载中...</div>
-        </div>
+        <div className="loading-state">加载中...</div>
       </div>
     );
   }
 
   return (
-    <div className="product-detail-container">
-      {/* 顶部导航栏 */}
+    <div className="product-detail-page">
+      {/* 导航栏 */}
       <NavBar
         onBack={handleBack}
-        className="product-nav"
+        className="detail-nav"
         right={
-          <div className="nav-actions" onClick={handleShare} style={{ fontSize: '20px', cursor: 'pointer' }}>
-            🔗
-          </div>
+          <span className="nav-share" onClick={() => Toast.show('分享功能开发中')}>
+            📤
+          </span>
         }
       >
         商品详情
       </NavBar>
 
-      {/* 商品图片展示 */}
-      <div className="product-image-container">
-        <img
-          src={productData.image || 'https://via.placeholder.com/400x400'}
-          alt={productData.name}
-          className="product-image"
-        />
-        {/* 商品标签 */}
-        {productData.tags && productData.tags.length > 0 && (
-          <div className="product-tags">
-            {productData.tags.map((tag, index) => (
-              <Badge key={index} className="product-tag" text={tag} color="danger" />
-            ))}
-          </div>
+      {/* 商品图片 */}
+      <div className="product-gallery">
+        <img src={product.image} alt={product.name} className="main-image" />
+        {product.tags && product.tags[0] && (
+          <span className="product-badge">{product.tags[0]}</span>
         )}
       </div>
 
-      {/* 商品信息卡片 */}
-      <Card className="product-info-card">
-        {/* 价格信息 */}
-        <div className="product-price-section">
-          <span className="currency-symbol">¥</span>
-          <span className="product-price">{productData.price.toFixed(2)}</span>
-          {productData.originalPrice && (
-            <span className="original-price">¥{productData.originalPrice.toFixed(2)}</span>
-          )}
-        </div>
-
-        {/* 商品名称 */}
-        <h1 className="product-name">{productData.name}</h1>
-
-        {/* 商品描述 */}
-        <p className="product-description">{productData.description || '暂无详细描述'}</p>
-
-        {/* 商品属性 */}
-        <div className="product-attributes">
-          <div className="attribute-item">
-            <span className="attribute-label">产地</span>
-            <span className="attribute-value">{productData.origin || '未知'}</span>
+      {/* 商品基本信息 */}
+      <div className="product-info-card">
+        <div className="price-row">
+          <div className="price-area">
+            <span className="currency">¥</span>
+            <span className="price">{product.price.toFixed(2)}</span>
+            {product.originalPrice && (
+              <span className="original-price">¥{product.originalPrice.toFixed(2)}</span>
+            )}
           </div>
-          <div className="attribute-item">
-            <span className="attribute-label">规格</span>
-            <span className="attribute-value">{productData.specs || '标准规格'}</span>
-          </div>
-          <div className="attribute-item">
-            <span className="attribute-label">保质期</span>
-            <span className="attribute-value">{productData.shelfLife || '12个月'}</span>
+          <div className="sales-info">
+            <span>已售 {product.sales}</span>
           </div>
         </div>
-      </Card>
+        
+        <h1 className="product-title">{product.name}</h1>
+        <p className="product-subtitle">{product.subtitle}</p>
+        
+        {/* 标签 */}
+        <div className="product-tags">
+          {product.tags?.map((tag, idx) => (
+            <span key={idx} className="tag-item">{tag}</span>
+          ))}
+        </div>
+      </div>
 
-      {/* 商品详情内容 */}
-      <Card className="product-details-card">
-        <Card.Header title="商品详情" className="card-header" />
-        <Card.Body className="product-detail-content">
-          <div className="detail-item">
-            <h3 className="detail-title">产品介绍</h3>
-            <p className="detail-text">
-              {productData.detailInfo ||
-                '本产品采用优质原料制作，经过严格的质量检测，确保安全卫生。全程冷链运输，保证新鲜度。'}
-            </p>
+      {/* 溯源信息卡片 */}
+      <div className="trace-card" onClick={handleViewTrace}>
+        <div className="trace-header">
+          <span className="trace-icon">🔍</span>
+          <span className="trace-title">溯源信息</span>
+          <span className="trace-badge">可追溯</span>
+        </div>
+        <div className="trace-content">
+          <div className="trace-item">
+            <span className="label">产地</span>
+            <span className="value">{product.origin}</span>
           </div>
+          <div className="trace-item">
+            <span className="label">生产商</span>
+            <span className="value">{product.producer}</span>
+          </div>
+          <div className="trace-item">
+            <span className="label">溯源节点</span>
+            <span className="value highlight">{traceStats?.totalNodes || 5}个环节全程追溯</span>
+          </div>
+        </div>
+        <div className="trace-action">
+          <span>查看完整溯源链路</span>
+          <span className="arrow">→</span>
+        </div>
+      </div>
 
-          <div className="detail-item">
-            <h3 className="detail-title">溯源信息</h3>
-            <div className="trace-info">
-              <div className="trace-item">
-                <span className="trace-label">生产批次：</span>
-                <span className="trace-value">{productData.batchId || '未知'}</span>
-              </div>
-              <div className="trace-item">
-                <span className="trace-label">生产日期：</span>
-                <span className="trace-value">{productData.productionDate || '未知'}</span>
-              </div>
-              <div className="trace-item">
-                <span className="trace-label">检验状态：</span>
-                <span className="trace-value">
-                  <CheckCircleOutline className="check-icon" />
-                  {productData.status || '合格'}
-                </span>
-              </div>
+      {/* 商品规格 */}
+      <div className="spec-card">
+        <div className="spec-row" onClick={() => setShowSpec(true)}>
+          <span className="spec-label">规格</span>
+          <span className="spec-value">{product.unit}</span>
+          <span className="spec-arrow">›</span>
+        </div>
+        <div className="spec-row">
+          <span className="spec-label">储存</span>
+          <span className="spec-value">{product.storage}</span>
+        </div>
+        <div className="spec-row">
+          <span className="spec-label">保质期</span>
+          <span className="spec-value">{product.shelfLife}</span>
+        </div>
+      </div>
+
+      {/* 营养信息 */}
+      {product.nutrition && (
+        <div className="nutrition-card">
+          <h3 className="card-title">🥗 营养成分</h3>
+          <div className="nutrition-grid">
+            <div className="nutrition-item">
+              <span className="value">{product.nutrition.protein}</span>
+              <span className="label">蛋白质</span>
+            </div>
+            <div className="nutrition-item">
+              <span className="value">{product.nutrition.fat}</span>
+              <span className="label">脂肪</span>
+            </div>
+            <div className="nutrition-item">
+              <span className="value">{product.nutrition.calories}</span>
+              <span className="label">热量</span>
+            </div>
+            <div className="nutrition-item">
+              <span className="value">{product.nutrition.omega3}</span>
+              <span className="label">Omega-3</span>
             </div>
           </div>
+        </div>
+      )}
 
-          {/* 详细图片展示 */}
-          {productData.detailImages && productData.detailImages.length > 0 && (
-            <div className="detail-images">
-              {productData.detailImages.map((img, index) => (
-                <img key={index} src={img} alt={`详情图片${index + 1}`} className="detail-image" />
-              ))}
-            </div>
-          )}
-        </Card.Body>
-      </Card>
+      {/* 商品详情 */}
+      <div className="detail-card">
+        <h3 className="card-title">📝 商品详情</h3>
+        <p className="detail-text">{product.description}</p>
+      </div>
 
       {/* 底部操作栏 */}
-      <div className="bottom-action-bar">
-        {/* 左侧操作 */}
-        <div className="left-actions">
-          <div className="action-icon" onClick={handleFavorite}>
-            {isFavorite ? <HeartOutline className="favorite-active" /> : <HeartOutline />}
-            <span>收藏</span>
+      <div className="bottom-bar">
+        <div className="bar-left">
+          <div className="bar-icon" onClick={handleFavorite}>
+            <span>{isFavorite ? '❤️' : '🤍'}</span>
+            <span className="icon-text">收藏</span>
           </div>
-          <div className="action-icon">
-            <span>🛒</span>
-            <span>购物车</span>
+          <div className="bar-icon" onClick={() => Toast.show('客服功能开发中')}>
+            <span>💬</span>
+            <span className="icon-text">客服</span>
           </div>
         </div>
-
-        {/* 数量选择 */}
-        <div className="quantity-selector">
-          <Button
-            size="small"
-            className="quantity-btn"
-            onClick={() => handleQuantityChange(-1)}
-            disabled={quantity <= 1}
-          >
-            -
-          </Button>
-          <span className="quantity-value">{quantity}</span>
-          <Button
-            size="small"
-            className="quantity-btn"
-            onClick={() => handleQuantityChange(1)}
-            disabled={quantity >= 99}
-          >
-            +
-          </Button>
-        </div>
-
-        {/* 右侧操作按钮 */}
-        <div className="right-actions">
-          <Button
-            className="add-to-cart-btn"
-            onClick={handleAddToCart}
-          >
+        <div className="bar-right">
+          <Button className="cart-btn" onClick={() => setShowSpec(true)}>
             加入购物车
           </Button>
-          <Button
-            className="buy-now-btn"
-            onClick={handleBuyNow}
-          >
+          <Button className="buy-btn" onClick={() => setShowSpec(true)}>
             立即购买
           </Button>
         </div>
       </div>
+
+      {/* 规格选择弹窗 */}
+      <Popup
+        visible={showSpec}
+        onMaskClick={() => setShowSpec(false)}
+        bodyStyle={{ borderTopLeftRadius: '16px', borderTopRightRadius: '16px' }}
+      >
+        <div className="spec-popup">
+          <div className="popup-header">
+            <img src={product.image} alt="" className="popup-image" />
+            <div className="popup-info">
+              <div className="popup-price">
+                <span className="currency">¥</span>
+                <span className="price">{product.price.toFixed(2)}</span>
+              </div>
+              <div className="popup-stock">库存: {product.stock}件</div>
+              <div className="popup-spec">已选: {product.unit}</div>
+            </div>
+            <span className="popup-close" onClick={() => setShowSpec(false)}>✕</span>
+          </div>
+          
+          <div className="popup-quantity">
+            <span className="quantity-label">购买数量</span>
+            <Stepper
+              value={quantity}
+              onChange={setQuantity}
+              min={1}
+              max={product.stock}
+            />
+          </div>
+
+          <div className="popup-actions">
+            <Button className="popup-cart-btn" onClick={handleAddToCart}>
+              加入购物车
+            </Button>
+            <Button className="popup-buy-btn" onClick={handleBuyNow}>
+              立即购买
+            </Button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 };
