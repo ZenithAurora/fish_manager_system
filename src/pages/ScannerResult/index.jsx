@@ -8,8 +8,12 @@ import eelProductImage from '../../assets/img/shopping/fish1.jpg';
 import qrCodeImage from '../../assets/img/qrCodeMock/qrcode.jpg';
 import videoPlaceholder from '../../assets/img/mapMock/map.png';
 
+// 导入AI分析组件
+import AIAnalysis from '../../components/AIAnalysis';
+
 const ScannerResult = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const location = useLocation();
 
   // 检查用户授权状态
@@ -117,7 +121,10 @@ const ScannerResult = () => {
   const [expandedNodeId, setExpandedNodeId] = useState(null);
   // 视频播放状态
   const [isPlaying, setIsPlaying] = useState(false);
+  // eslint-disable-next-line
   const videoRef = useRef(null);
+  // AI分析弹窗状态
+  const [showAIAnalysis, setShowAIAnalysis] = useState(false);
 
   // 返回上一页
   const handleBack = () => {
@@ -125,6 +132,7 @@ const ScannerResult = () => {
   };
 
   // 重新扫描
+  // eslint-disable-next-line
   const handleRescan = () => {
     navigate('/qrcode-scanner');
   };
@@ -430,10 +438,21 @@ const ScannerResult = () => {
 
             {/* 底部操作按钮 */}
             <div className="action-buttons">
+              <Button className="ai-analysis-btn" onClick={() => setShowAIAnalysis(true)}>
+                🤖 AI智能分析
+              </Button>
               <Button className="video-monitor-btn" onClick={toggleVideoMode}>
                 查看实时监控
               </Button>
             </div>
+
+            {/* AI分析弹窗 */}
+            <AIAnalysis
+              visible={showAIAnalysis}
+              onClose={() => setShowAIAnalysis(false)}
+              productData={productInfo}
+              traceData={productInfo.traceChain}
+            />
           </>
         )}
       </div>
