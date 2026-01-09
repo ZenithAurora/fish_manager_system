@@ -61,8 +61,12 @@ const ProductDetail = () => {
 
   // 立即购买
   const handleBuyNow = () => {
-    addToCart(product, quantity);
-    Toast.show({ content: '即将跳转结算页面', icon: 'loading' });
+    // 跳转到订单确认页，传入单个商品
+    const orderItem = {
+      ...product,
+      quantity: quantity
+    };
+    navigate('/order-confirm', { state: { items: [orderItem] } });
     setShowSpec(false);
   };
 

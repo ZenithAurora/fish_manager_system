@@ -243,3 +243,195 @@ export const verifyPayPassword = (password) => {
     }, 300);
   });
 };
+
+// ========== 账号密码登录功能 (Force Update) ==========
+
+// 存储用户名密码用户数据
+const usernameUsers = {
+  'user': {
+    id: 'USER_1001',
+    username: 'user',
+    password: '123456',
+    phone: '13800138000',
+    nickname: '演示用户',
+    avatar: avatarImg,
+    payPassword: '123456',
+    isLoggedIn: false,
+    createdAt: '2024-01-01T00:00:00Z',
+    isNewUser: false,
+    preferences: {
+      notifications: true,
+      autoPlay: false,
+      theme: 'light'
+    },
+    stats: {
+      totalOrders: 5,
+      totalSpent: 1280,
+      traceCount: 3,
+      favoriteCount: 2
+    }
+  },
+  'test': {
+    id: 'USER_1002',
+    username: 'test',
+    password: '123456',
+    phone: '13900139000',
+    nickname: '测试用户',
+    avatar: avatarImg,
+    payPassword: '654321',
+    isLoggedIn: false,
+    createdAt: '2024-01-02T00:00:00Z',
+    isNewUser: false,
+    preferences: {
+      notifications: false,
+      autoPlay: true,
+      theme: 'dark'
+    },
+    stats: {
+      totalOrders: 2,
+      totalSpent: 560,
+      traceCount: 1,
+      favoriteCount: 0
+    }
+  }
+};
+
+/**
+ * 账号密码登录
+ * @param {string} username 用户名
+ * @param {string} password 密码
+ * @returns {Promise}
+ */
+export const mockUsernameLogin = (username, password) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // 验证用户名密码
+      if (!username || !password) {
+        reject({ success: false, message: '请输入用户名和密码' });
+        return;
+      }
+      
+      const userData = usernameUsers[username];
+      
+      // 检查用户是否存在
+      if (!userData) {
+        reject({ success: false, message: '用户不存在' });
+        return;
+      }
+      
+      // 验证密码
+      if (userData.password !== password) {
+        reject({ success: false, message: '密码错误' });
+        return;
+      }
+      
+      // 登录成功，保存用户信息
+      const user = {
+        ...userData,
+        isLoggedIn: true,
+        isNewUser: !userData.payPassword
+      };
+      
+      saveUser(user);
+      
+      resolve({ 
+        success: true, 
+        message: '登录成功',
+        user: user,
+        isNewUser: user.isNewUser
+      });
+    }, 600);
+  });
+};
+
+/**
+ * 检查用户名是否可用
+ * @param {string} username 用户名
+ * @returns {Promise}
+ */
+export const checkUsernameAvailable = (username) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ 
+        success: true, 
+        available: !usernameUsers[username],
+        message: usernameUsers[username] ? '用户名已存在' : '用户名可用'
+      });
+    }, 300);
+  });
+};
+
+/**
+ * 用户名注册
+ * @param {object} userInfo 用户信息 { username, password, nickname, phone? }
+ * @returns {Promise}
+ */
+export const mockUsernameRegister = (userInfo) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const { username, password, nickname, phone } = userInfo;
+      
+      // 验证用户名
+      if (!username || username.length < 3) {
+        reject({ success: false, message: '用户名至少3个字符' });
+        return;
+      }
+      
+      // 验证密码
+      if (!password || password.length < 6) {
+        reject({ success: false, message: '密码至少6个字符' });
+        return;
+      }
+      
+      // 验证昵称
+      if (!nickname || nickname.trim().length < 2) {
+        reject({ success: false, message: '昵称至少2个字符' });
+        return;
+      }
+      
+      // 检查用户名是否已存在
+      if (usernameUsers[username]) {
+        reject({ success: false, message: '用户名已存在' });
+        return;
+      }
+      
+      // 创建新用户
+      const newUser = {
+        id: `USER_${Date.now()}`,
+        username: username,
+        password: password,
+        phone: phone || '',
+        nickname: nickname.trim(),
+        avatar: avatarImg,
+        payPassword: '',
+        isLoggedIn: true,
+        createdAt: new Date().toISOString(),
+        isNewUser: true,
+        preferences: {
+          notifications: true,
+          autoPlay: false,
+          theme: 'light'
+        },
+        stats: {
+          totalOrders: 0,
+          totalSpent: 0,
+          traceCount: 0,
+          favoriteCount: 0
+        }
+      };
+      
+      // 保存到用户列表
+      usernameUsers[username] = newUser;
+      
+      // 保存到当前用户
+      saveUser(newUser);
+      
+      resolve({
+        success: true,
+        message: '注册成功，请完善支付密码',
+        user: newUser,
+        isNewUser: true
+      });
+    }, 500);
+  });
+};

@@ -9,12 +9,14 @@ import {
   SetOutline,
   BellOutline,
   QuestionCircleOutline,
-  UserContactOutline
+  UserContactOutline,
+  MessageOutline
 } from 'antd-mobile-icons';
 import { getCurrentUser, getTraceHistory } from '../../mock/userData';
 import { mockLogout, isLoggedIn } from '../../mock/authService';
 import { getOrders } from '../../mock/orderData';
 import FooterNav from '../../components/FooterNav';
+import FeedbackModal from '../../components/FeedbackModal';
 import './index.scss';
 
 const UserCenter = () => {
@@ -26,6 +28,7 @@ const UserCenter = () => {
     traceCount: 0,
     favoriteCount: 0
   });
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   // 加载用户数据
   useEffect(() => {
@@ -91,6 +94,9 @@ const UserCenter = () => {
         break;
       case 'about':
         Toast.show({ content: '鳗知溯系统 v1.0.0', icon: 'success' });
+        break;
+      case 'feedback':
+        setShowFeedbackModal(true);
         break;
       default:
         break;
@@ -194,6 +200,14 @@ const UserCenter = () => {
           <span className="list-text">关于我们</span>
           <RightOutline className="list-arrow" />
         </div>
+        
+        <div className="list-item" onClick={() => handleMenuClick('feedback')}>
+          <div className="list-icon">
+            <MessageOutline />
+          </div>
+          <span className="list-text">意见反馈</span>
+          <RightOutline className="list-arrow" />
+        </div>
       </div>
 
       {/* 退出登录按钮 */}
@@ -210,6 +224,12 @@ const UserCenter = () => {
 
       {/* 底部导航 */}
       <FooterNav />
+
+      {/* 反馈弹窗 */}
+      <FeedbackModal
+        visible={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+      />
     </div>
   );
 };

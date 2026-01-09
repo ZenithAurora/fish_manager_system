@@ -1,0 +1,274 @@
+// 导入设计系统
+@import '../../styles/design-system';
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 20px;
+
+  .adm-nav-bar {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .adm-nav-bar-back {
+      color: #fff;
+    }
+    
+    .adm-nav-bar-title {
+      color: #fff;
+    }
+    
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      
+      &:active {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  .nav-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+}
+
+.admin-content {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcome-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  h2 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s var(--ease-in-out);
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .stat-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  
+  .stat-content {
+    text-align: center;
+    
+    .stat-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+  }
+  
+  // 不同类型的卡片颜色
+  &.users .stat-number {
+    color: #10b981;
+  }
+  
+  &.orders .stat-number {
+    color: #6366f1;
+  }
+  
+  &.feedback .stat-number {
+    color: #f59e0b;
+  }
+  
+  &.pending .stat-number {
+    color: #ef4444;
+  }
+}
+
+.section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    
+    .adm-button {
+      font-size: 13px;
+      color: var(--color-primary);
+    }
+  }
+}
+
+.feedback-item {
+  .feedback-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+    @extend .ds-truncate;
+  }
+  
+  .feedback-meta {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+}
+
+.empty-feedback {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.admin-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+// 响应式设计
+@media (max-width: 375px) {
+  .admin-content {
+    padding: 16px;
+  }
+  
+  .welcome-card {
+    padding: 20px;
+    
+    h2 {
+      font-size: 20px;
+    }
+  }
+  
+  .stats-grid {
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+    
+    .stat-icon {
+      font-size: 24px;
+    }
+    
+    .stat-content .stat-number {
+      font-size: 24px;
+    }
+  }
+  
+  .section {
+    padding: 16px;
+  }
+}
+
+// 深色模式适配
+@media (prefers-color-scheme: dark) {
+  .welcome-card,
+  .stat-card,
+  .section {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+    
+    h2, h3 {
+      color: #fff;
+    }
+    
+    p, .stat-label {
+      color: var(--color-text-secondary);
+    }
+  }
+  
+  .feedback-item {
+    .feedback-title {
+      color: #fff;
+    }
+  }
+}
+
+// 动画效果
+@keyframes admin-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-card {
+  animation: admin-fade-in 0.4s var(--ease-out) 0.1s both;
+}
+
+.stats-grid {
+  animation: admin-fade-in 0.4s var(--ease-out) 0.2s both;
+}
+
+.section {
+  animation: admin-fade-in 0.4s var(--ease-out) 0.3s both;
+}

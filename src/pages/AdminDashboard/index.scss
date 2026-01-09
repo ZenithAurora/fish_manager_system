@@ -1,0 +1,182 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f5f7fa;
+
+  .nav-title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .logout-btn {
+    .adm-button-icon {
+      margin-right: 4px;
+    }
+  }
+
+  .admin-content {
+    padding: 16px;
+  }
+
+  .welcome-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    
+    h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 13px;
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    .stat-card {
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+      &.users {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      &.orders {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+      }
+
+      &.feedback {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+      }
+
+      &.pending {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+      }
+
+      .stat-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        opacity: 0.9;
+      }
+
+      .stat-content {
+        .stat-number {
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 1;
+          margin-bottom: 4px;
+        }
+
+        .stat-label {
+          font-size: 12px;
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .section {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+    }
+  }
+
+  .feedback-item {
+    .feedback-title {
+      font-size: 14px;
+      color: #1f2937;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .feedback-meta {
+      font-size: 12px;
+      color: #6b7280;
+    }
+  }
+
+  .empty-feedback {
+    text-align: center;
+    color: #9ca3af;
+    padding: 20px 0;
+    font-size: 14px;
+  }
+
+  .adm-list {
+    --border-inner: none;
+    --border-bottom: 1px solid #f3f4f6;
+    --border-top: none;
+
+    .adm-list-item {
+      padding-left: 0;
+      padding-right: 0;
+
+      &:last-child {
+        --border-bottom: none;
+      }
+    }
+  }
+}
+
+// 移动端适配
+@media (max-width: 375px) {
+  .admin-dashboard {
+    .admin-content {
+      padding: 12px;
+    }
+
+    .stats-grid {
+      gap: 10px;
+      
+      .stat-card {
+        padding: 12px;
+        
+        .stat-content {
+          .stat-number {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+
+    .welcome-card {
+      padding: 16px;
+      
+      h2 {
+        font-size: 18px;
+      }
+    }
+  }
+}

@@ -905,3 +905,88 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
+
+/* 管理员入口触发区域 */
+.admin-entry-trigger {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.1);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.5);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+    background: rgba(102, 126, 234, 0.3);
+  }
+  
+  .admin-tooltip {
+    font-size: 16px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover .admin-tooltip {
+    opacity: 1;
+  }
+}
+
+/* 适配移动端 */
+@media (max-width: 375px) {
+  .admin-entry-trigger {
+    bottom: 70px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    
+    .admin-tooltip {
+      font-size: 14px;
+    }
+  }
+}
+
+/* 后台管理页面特殊样式 */
+.admin-page {
+  background: #f8fafc;
+  
+  .adm-nav-bar {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+  }
+}
+
+/* 深色模式适配 */
+.dark-mode {
+  .admin-entry-trigger {
+    background: rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.4);
+    
+    &:hover {
+      background: rgba(102, 126, 234, 0.25);
+      border-color: rgba(102, 126, 234, 0.6);
+    }
+  }
+  
+  .admin-page {
+    background: #0f172a;
+    
+    .adm-nav-bar {
+      background: #1e293b;
+      border-bottom-color: #334155;
+    }
+  }
+}

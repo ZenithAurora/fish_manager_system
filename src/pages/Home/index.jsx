@@ -5,7 +5,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useNavigate } from 'react-router-dom';
-import './index.scss';
+import './index-new.scss';
 
 // 导入图片资源
 import bar1 from '../../assets/img/bar/1.png';

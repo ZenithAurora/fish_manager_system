@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SearchBar, Toast, Badge, Tabs, Empty } from 'antd-mobile';
+import { SearchBar, Toast, Badge, Tabs, Empty, Popup } from 'antd-mobile';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import './index.scss';
+import './index-new.scss';
 
 // 导入Mock数据
 import { fishProducts, categories, getFishByCategory, searchFish } from '../../mock/fishProducts';
-import { addToCart, getCart, getCartCount } from '../../mock/cartData';
+import { addToCart, getCart, getCartCount, clearCart } from '../../mock/cartData';
 
 const Mall = () => {
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ const Mall = () => {
   const [products, setProducts] = useState(fishProducts);
   const [cartCount, setCartCount] = useState(0);
   const [sortType, setSortType] = useState('default'); // default, price-asc, price-desc, sales
+  const [showCartPopup, setShowCartPopup] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
 
   // 初始化
   useEffect(() => {
@@ -28,6 +30,7 @@ const Mall = () => {
   // 更新购物车数量
   const updateCartCount = () => {
     setCartCount(getCartCount());
+    setCartItems(getCart());
   };
 
   // 筛选商品
@@ -90,9 +93,28 @@ const Mall = () => {
     navigate('/product-detail', { state: { product } });
   };
 
-  // 跳转到购物车
+  // 打开购物车
   const handleCartClick = () => {
-    Toast.show({ content: '购物车功能开发中', icon: 'loading' });
+    setCartItems(getCart());
+    setShowCartPopup(true);
+  };
+
+  // 去结算
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      Toast.show('购物车为空');
+      return;
+    }
+    setShowCartPopup(false);
+    navigate('/order-confirm', { state: { items: cartItems } });
+  };
+
+  // 清空购物车
+  const handleClearCart = () => {
+    clearCart();
+    updateCartCount();
+    setShowCartPopup(false);
+    Toast.show('购物车已清空');
   };
 
   // 排序选项
@@ -223,6 +245,46 @@ const Mall = () => {
           <span>✓ 全程可溯源</span>
         </div>
       </div>
+
+      {/* 购物车弹窗 */}
+      <Popup
+        visible={showCartPopup}
+        onMaskClick={() => setShowCartPopup(false)}
+        bodyStyle={{ borderTopLeftRadius: '16px', borderTopRightRadius: '16px', minHeight: '40vh' }}
+      >
+        <div className="cart-popup">
+          <div className="cart-header">
+            <h3>购物车 ({cartCount})</h3>
+            <span className="clear-btn" onClick={handleClearCart}>清空</span>
+          </div>
+          
+          <div className="cart-list">
+            {cartItems.length > 0 ? cartItems.map((item, index) => (
+              <div key={index} className="cart-item">
+                <img src={item.image} alt="" className="item-image" />
+                <div className="item-info">
+                  <div className="item-name">{item.name}</div>
+                  <div className="item-meta">
+                    <span className="item-price">¥{item.price}</span>
+                    <span className="item-quantity">x{item.quantity}</span>
+                  </div>
+                </div>
+              </div>
+            )) : (
+              <Empty description="购物车空空如也" />
+            )}
+          </div>
+
+          <div className="cart-footer">
+            <div className="cart-total">
+              合计: <span className="total-price">¥{cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}</span>
+            </div>
+            <button className="checkout-btn" onClick={handleCheckout} disabled={cartItems.length === 0}>
+              去结算
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 };

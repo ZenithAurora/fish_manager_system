@@ -1,0 +1,521 @@
+/**
+ * 鳗知溯设计系统 - 淘宝级现代化设计
+ * 采用 Material You + iOS + 电商设计语言
+ */
+
+// ========== 设计令牌 (Design Tokens) ==========
+:root {
+  // 品牌色系 - 淘宝橙色 + 渐变时尚
+  --color-primary: #ff5000;
+  --color-primary-light: #ff7800;
+  --color-primary-dark: #e64200;
+  --color-secondary: #00b96b;
+  --color-accent: #1677ff;
+  
+  // 渐变色系 - 现代渐变效果
+  --gradient-primary: linear-gradient(135deg, #ff5000 0%, #ff7800 100%);
+  --gradient-secondary: linear-gradient(135deg, #00b96b 0%, #00d684 100%);
+  --gradient-accent: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
+  --gradient-premium: linear-gradient(135deg, #722ed1 0%, #eb2f96 100%);
+  
+  // 中性色系 - 现代化中性色调
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-disabled: #bfbfbf;
+  
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f5f6fa;
+  --color-bg-tertiary: #f0f2f5;
+  
+  --color-border-light: #f0f0f0;
+  --color-border-regular: #d9d9d9;
+  --color-border-strong: #bfbfbf;
+  
+  // 功能色系
+  --color-success: #00b96b;
+  --color-warning: #fa8c16;
+  --color-error: #ff4d4f;
+  --color-info: #1677ff;
+  
+  // 阴影系统 - 现代化阴影层次
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.16);
+  
+  // 圆角系统
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+  
+  // 间距系统
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  
+  // 字体系统
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  // 动画曲线
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  
+  // 动效时长
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+}
+
+// ========== 基础样式重置 ==========
+.ds-reset {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.ds-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+// ========== 文字样式工具类 ==========
+.ds-text {
+  &-xs { font-size: var(--font-size-xs); }
+  &-sm { font-size: var(--font-size-sm); }
+  &-base { font-size: var(--font-size-base); }
+  &-lg { font-size: var(--font-size-lg); }
+  &-xl { font-size: var(--font-size-xl); }
+  &-2xl { font-size: var(--font-size-2xl); }
+  &-3xl { font-size: var(--font-size-3xl); }
+  
+  &-normal { font-weight: var(--font-weight-normal); }
+  &-medium { font-weight: var(--font-weight-medium); }
+  &-semibold { font-weight: var(--font-weight-semibold); }
+  &-bold { font-weight: var(--font-weight-bold); }
+  
+  &-primary { color: var(--color-text-primary); }
+  &-secondary { color: var(--color-text-secondary); }
+  &-tertiary { color: var(--color-text-tertiary); }
+  &-disabled { color: var(--color-text-disabled); }
+  
+  &-center { text-align: center; }
+  &-left { text-align: left; }
+  &-right { text-align: right; }
+}
+
+// ========== 颜色工具类 ==========
+.ds-bg {
+  &-primary { background-color: var(--color-bg-primary); }
+  &-secondary { background-color: var(--color-bg-secondary); }
+  &-tertiary { background-color: var(--color-bg-tertiary); }
+}
+
+.ds-color {
+  &-primary { color: var(--color-primary); }
+  &-secondary { color: var(--color-secondary); }
+  &-accent { color: var(--color-accent); }
+  &-success { color: var(--color-success); }
+  &-warning { color: var(--color-warning); }
+  &-error { color: var(--color-error); }
+  &-info { color: var(--color-info); }
+}
+
+// ========== 间距工具类 ==========
+@mixin spacing-utils($property, $prefix) {
+  .#{$prefix} {
+    &-1 { #{$property}: var(--space-1); }
+    &-2 { #{$property}: var(--space-2); }
+    &-3 { #{$property}: var(--space-3); }
+    &-4 { #{$property}: var(--space-4); }
+    &-5 { #{$property}: var(--space-5); }
+    &-6 { #{$property}: var(--space-6); }
+    &-8 { #{$property}: var(--space-8); }
+    &-10 { #{$property}: var(--space-10); }
+    &-12 { #{$property}: var(--space-12); }
+  }
+}
+
+@include spacing-utils(margin, 'ds-m');
+@include spacing-utils(padding, 'ds-p');
+@include spacing-utils(margin-top, 'ds-mt');
+@include spacing-utils(margin-bottom, 'ds-mb');
+@include spacing-utils(margin-left, 'ds-ml');
+@include spacing-utils(margin-right, 'ds-mr');
+@include spacing-utils(padding-top, 'ds-pt');
+@include spacing-utils(padding-bottom, 'ds-pb');
+@include spacing-utils(padding-left, 'ds-pl');
+@include spacing-utils(padding-right, 'ds-pr');
+
+// ========== 圆角工具类 ==========
+.ds-rounded {
+  &-xs { border-radius: var(--radius-xs); }
+  &-sm { border-radius: var(--radius-sm); }
+  &-md { border-radius: var(--radius-md); }
+  &-lg { border-radius: var(--radius-lg); }
+  &-xl { border-radius: var(--radius-xl); }
+  &-2xl { border-radius: var(--radius-2xl); }
+  &-full { border-radius: var(--radius-full); }
+}
+
+// ========== 阴影工具类 ==========
+.ds-shadow {
+  &-xs { box-shadow: var(--shadow-xs); }
+  &-sm { box-shadow: var(--shadow-sm); }
+  &-md { box-shadow: var(--shadow-md); }
+  &-lg { box-shadow: var(--shadow-lg); }
+  &-xl { box-shadow: var(--shadow-xl); }
+  &-none { box-shadow: none; }
+}
+
+// ========== 交互组件样式 ==========
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-normal) var(--ease-in-out);
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  
+  // 尺寸变体
+  &--sm {
+    height: 32px;
+    padding: 0 var(--space-3);
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-sm);
+  }
+  
+  &--md {
+    height: 40px;
+    padding: 0 var(--space-4);
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-md);
+  }
+  
+  &--lg {
+    height: 48px;
+    padding: 0 var(--space-5);
+    font-size: var(--font-size-lg);
+    border-radius: var(--radius-lg);
+  }
+  
+  // 颜色变体
+  &--primary {
+    background: var(--gradient-primary);
+    color: white;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  &--secondary {
+    background: var(--gradient-secondary);
+    color: white;
+  }
+  
+  &--outline {
+    background: transparent;
+    border: 1.5px solid var(--color-border-regular);
+    color: var(--color-text-primary);
+    
+    &:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+  }
+  
+  // 禁用状态
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// 卡片组件
+.ds-card {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--duration-normal) var(--ease-in-out);
+  
+  &--shadow {
+    box-shadow: var(--shadow-md);
+  }
+  
+  &--hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  &__header {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  
+  &__body {
+    padding: var(--space-4);
+  }
+  
+  &__footer {
+    padding: var(--space-4);
+    border-top: 1px solid var(--color-border-light);
+  }
+}
+
+// 输入框组件
+.ds-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--color-border-regular);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  transition: all var(--duration-fast) var(--ease-in-out);
+  background: var(--color-bg-primary);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+  
+  &--error {
+    border-color: var(--color-error);
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.1);
+    }
+  }
+}
+
+// ========== 动画类 ==========
+@keyframes ds-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ds-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ds-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ds-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.ds-animate {
+  &-fade-in { animation: ds-fade-in 0.3s var(--ease-out); }
+  &-slide-up { animation: ds-slide-up 0.4s var(--ease-out); }
+  &-scale-in { animation: ds-scale-in 0.3s var(--ease-out); }
+  &-pulse { animation: ds-pulse 2s infinite; }
+}
+
+// ========== 响应式设计 ==========
+@media (max-width: 375px) {
+  :root {
+    --space-4: 14px;
+    --font-size-base: 13px;
+  }
+}
+
+@media (min-width: 768px) {
+  .ds-container {
+    padding: 0 var(--space-6);
+  }
+}
+
+// ========== 深色模式支持 ==========
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #71717a;
+    
+    --color-bg-primary: #18181b;
+    --color-bg-secondary: #27272a;
+    --color-bg-tertiary: #3f3f46;
+    
+    --color-border-light: #3f3f46;
+    --color-border-regular: #52525b;
+    --color-border-strong: #71717a;
+  }
+  
+  .ds-button--outline {
+    border-color: var(--color-border-regular);
+    
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
+}
+
+// ========== 实用工具类 ==========
+.ds-flex {
+  display: flex;
+  
+  &-col { flex-direction: column; }
+  &-row { flex-direction: row; }
+  &-wrap { flex-wrap: wrap; }
+  
+  &-center {
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &-between {
+    justify-content: space-between;
+  }
+  
+  &-around {
+    justify-content: space-around;
+  }
+}
+
+.ds-hidden { display: none; }
+.ds-block { display: block; }
+.ds-inline-block { display: inline-block; }
+
+.ds-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-pointer { cursor: pointer; }
+.ds-select-none { user-select: none; }
+
+// ========== 电商专用组件 ==========
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  
+  &--primary {
+    background: var(--gradient-primary);
+    color: white;
+  }
+  
+  &--secondary {
+    background: var(--gradient-secondary);
+    color: white;
+  }
+  
+  &--discount {
+    background: linear-gradient(135deg, #ff4d4f 0%, #f759ab 100%);
+    color: white;
+  }
+}
+
+.ds-price {
+  display: flex;
+  align-items: baseline;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  
+  &__symbol {
+    font-size: var(--font-size-sm);
+    margin-right: 1px;
+  }
+  
+  &__integer {
+    font-size: var(--font-size-xl);
+  }
+  
+  &__decimal {
+    font-size: var(--font-size-sm);
+  }
+  
+  &--original {
+    color: var(--color-text-tertiary);
+    text-decoration: line-through;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    margin-left: var(--space-2);
+  }
+}
+
+// 骨架屏加载效果
+.ds-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-tertiary) 50%,
+    var(--color-bg-secondary) 100%
+  );
+  background-size: 200% 100%;
+  animation: ds-skeleton-loading 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes ds-skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
