@@ -1,94 +1,64 @@
-/* 首页样式 - 现代设计 */
+/* 首页样式 - 极简玻璃拟态设计 */
 
 .home-page {
   min-height: 100vh;
-  background: #f5f7fa;
-  padding-bottom: 80px;
+  // 使用全局定义的玻璃质感背景，如果未定义则回退
+  background: var(--background-gradient, linear-gradient(145deg, #f3f4f6 0%, #f9fafb 100%));
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* 顶部区域 */
+/* 顶部区域 - 极简 */
 .home-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 16px 16px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 
   .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    height: 24px; // 保持固定高度
 
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
 
-      .logo-icon {
-        font-size: 28px;
+      .logo-img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
       }
 
       .logo-text {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
-        color: #fff;
-        letter-spacing: 1px;
-      }
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-
-      .action-item {
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.3s;
-
-        &:active {
-          transform: scale(0.95);
-          background: rgba(255, 255, 255, 0.3);
-        }
-      }
-    }
-  }
-
-  .search-wrapper {
-    .home-search {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      padding: 4px 8px;
-
-      .adm-search-bar-input-box {
-        background: transparent;
-      }
-
-      input {
-        font-size: 14px;
+        color: #111827; // 深色字更显质感
+        letter-spacing: 0.5px;
       }
     }
   }
 }
 
-/* 轮播图 */
+/* 轮播图 - 悬浮质感 */
 .banner-section {
-  margin: -10px 16px 0;
-  position: relative;
-  z-index: 10;
+  margin: 16px 20px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); // 更柔和的阴影
+  transform: translateZ(0);
 
   .home-swiper {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-
+    border-radius: 20px;
+    
     .banner-item {
       position: relative;
       height: 180px;
@@ -99,352 +69,383 @@
         object-fit: cover;
       }
 
+      // 极简渐变遮罩
       .banner-overlay {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 20px 16px 16px;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+        padding: 40px 20px 20px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
         color: #fff;
+        text-align: left;
 
         h3 {
           margin: 0 0 4px;
           font-size: 18px;
           font-weight: 600;
+          color: #fff;
         }
 
         p {
           margin: 0;
-          font-size: 13px;
+          font-size: 12px;
           opacity: 0.9;
+          font-weight: 300;
         }
       }
     }
 
+    // 轮播点优化
     .swiper-pagination-bullet {
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 1;
-
+      background: rgba(255, 255, 255, 0.6);
+      width: 4px;
+      height: 4px;
+      transition: all 0.3s;
+      
       &-active {
         background: #fff;
-        width: 20px;
-        border-radius: 4px;
+        width: 12px;
+        border-radius: 2px;
       }
     }
   }
 }
 
-/* 特色标签 */
+/* 标签栏 - 简约横排 */
 .feature-tags {
   display: flex;
-  justify-content: space-around;
-  padding: 16px 16px 0;
-  background: #fff;
-  margin: 12px 16px 0;
-  border-radius: 12px;
-  padding-bottom: 16px;
+  justify-content: space-between; // 两端对齐
+  padding: 0 32px; // 增加内边距
+  margin: 16px 0;
+  background: transparent;
 
   .tag-item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 
     .tag-icon {
       color: #10b981;
-      font-weight: 600;
       font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 50%;
     }
 
     .tag-text {
-      font-size: 12px;
-      color: #666;
-    }
-  }
-}
-
-/* 快捷入口 */
-.quick-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 20px 16px;
-  background: #fff;
-  margin: 12px 16px 0;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-
-  .action-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-
-    .action-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-      transition: all 0.3s;
-    }
-
-    .action-text {
-      font-size: 12px;
-      color: #333;
+      font-size: 11px;
+      color: #6b7280;
       font-weight: 500;
     }
-
-    &:active .action-icon {
-      transform: scale(0.95);
-    }
   }
 }
 
-/* 核心功能卡片 */
+/* 核心功能卡片 - 电商白金质感 */
 .core-feature-card {
+  margin: 20px 20px 0;
+  padding: 24px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin: 12px 16px 0;
-  padding: 20px;
-  border-radius: 16px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(0, 0, 0, 0.02);
 
   &:active {
     transform: scale(0.98);
+    background: #fafafa;
   }
 
-  .feature-left {
-    .feature-icon-large {
-      width: 60px;
-      height: 60px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-    }
+  // 极淡的背景装饰
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(270deg, rgba(16, 185, 129, 0.03) 0%, transparent 100%);
+    z-index: 1;
   }
 
   .feature-content {
     flex: 1;
-    margin-left: 16px;
-    color: #fff;
+    z-index: 2;
+    padding-right: 16px;
 
-    h3 {
-      margin: 0 0 6px;
-      font-size: 18px;
-      font-weight: 600;
+    .feature-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      h3 {
+        font-size: 20px;
+        font-weight: 800;
+        color: #111827;
+        margin: 0;
+        letter-spacing: -0.5px;
+      }
+
+      .feature-badge {
+        font-size: 10px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 2px 6px;
+        border-radius: 4px 4px 4px 0;
+        font-weight: 600;
+      }
     }
 
     p {
-      margin: 0 0 10px;
       font-size: 13px;
-      opacity: 0.9;
+      color: #6b7280;
+      margin: 0 0 16px 0;
+      line-height: 1.4;
     }
 
     .feature-highlights {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
+      flex-wrap: wrap;
 
-      span {
+      .hl-tag {
         font-size: 11px;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 4px 8px;
-        border-radius: 12px;
+        color: #374151;
+        background: #f3f4f6;
+        padding: 4px 10px;
+        border-radius: 100px;
+        font-weight: 500;
       }
     }
   }
 
-  .feature-arrow {
-    font-size: 24px;
-    color: rgba(255, 255, 255, 0.8);
-    margin-left: 10px;
+  .feature-image-area {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .feature-icon-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.15));
+      transition: transform 0.3s;
+    }
+
+    .scan-btn {
+      font-size: 10px;
+      color: #10b981;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
   }
 }
 
-/* AI功能卡片 */
+/* AI功能卡片 - 简约白 */
 .ai-feature-card {
-  background: linear-gradient(135deg, #fff 0%, #f8faff 100%);
-  margin: 12px 16px 0;
+  margin: 16px 20px 0;
   padding: 20px;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
 
   .ai-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 
-    .ai-icon {
-      font-size: 24px;
-    }
-
-    .ai-title {
-      font-size: 16px;
-      font-weight: 600;
+    .ai-icon { font-size: 20px; }
+    .ai-title { 
+      font-size: 16px; 
+      font-weight: 700; 
       color: #1f2937;
     }
-
     .ai-badge {
-      background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
-      color: #fff;
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-weight: 600;
+      background: #fff1f2;
+      color: #e11d48;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
     }
   }
 
   .ai-desc {
     font-size: 13px;
     color: #6b7280;
-    margin: 0 0 12px;
+    margin-bottom: 12px;
     line-height: 1.5;
   }
 
   .ai-tags {
     display: flex;
     gap: 8px;
-
     span {
-      font-size: 12px;
-      color: #667eea;
-      background: rgba(102, 126, 234, 0.1);
-      padding: 4px 12px;
-      border-radius: 12px;
+      font-size: 10px;
+      color: #6366f1;
+      background: #eef2ff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
     }
   }
 }
 
-/* 热销推荐 */
+/* 热销推荐 - 超紧凑宽版布局 */
 .recommend-section {
-  margin: 16px 16px 0;
+  margin: 24px 6px 0;
 
   .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    padding: 0 4px;
 
     h3 {
-      margin: 0;
       font-size: 18px;
-      font-weight: 600;
-      color: #1f2937;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.5px;
     }
 
     .view-more {
-      font-size: 13px;
-      color: #667eea;
-      cursor: pointer;
+      font-size: 12px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+      
+      &:active {
+        color: #10b981;
+      }
     }
   }
 
   .product-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 0px;
 
     .product-card {
-      background: #fff;
-      border-radius: 16px;
+      width: 90%;
+      margin-bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 16px; 
       overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-      cursor: pointer;
-      transition: all 0.3s;
-
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      
       &:active {
         transform: scale(0.98);
+        background: #fff;
       }
 
       .product-image {
         position: relative;
-        height: 140px;
-
+        width: 100%;
+        padding-top: 100%; // 保持1:1正方形
+        background: #f9fafb; 
+        
         img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-tag {
           position: absolute;
-          top: 8px;
-          left: 8px;
-          background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+          top: 6px;
+          left: 6px;
+          background: rgba(239, 68, 68, 0.95);
           color: #fff;
-          font-size: 10px;
-          padding: 3px 8px;
-          border-radius: 8px;
+          font-size: 9px;
+          padding: 2px 6px;
+          border-radius: 4px;
           font-weight: 500;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          z-index: 10;
         }
       }
 
       .product-info {
-        padding: 12px;
+        padding: 6px 8px;
 
         .product-name {
-          margin: 0 0 4px;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
           color: #1f2937;
-          white-space: nowrap;
+          margin-bottom: 4px;
+          line-height: 1.3;
+          height: 31px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
           overflow: hidden;
-          text-overflow: ellipsis;
         }
 
         .product-subtitle {
-          margin: 0 0 8px;
-          font-size: 11px;
-          color: #9ca3af;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+           display: none;
         }
 
         .product-footer {
           display: flex;
           justify-content: space-between;
-          align-items: flex-end;
+          align-items: center;
+          margin-top: 2px;
 
           .product-price {
+            color: #ef4444;
+            font-weight: 700;
             display: flex;
             align-items: baseline;
-            gap: 2px;
-
-            .currency {
-              font-size: 12px;
-              color: #ef4444;
-              font-weight: 600;
+            line-height: 1;
+            
+            .currency { 
+              font-size: 10px; 
+              margin-right: 1px; 
             }
-
-            .price {
-              font-size: 18px;
-              color: #ef4444;
-              font-weight: 700;
+            .price { 
+              font-size: 15px; 
+              font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             }
-
-            .original-price {
-              font-size: 11px;
-              color: #9ca3af;
+            .original-price{
               text-decoration: line-through;
-              margin-left: 4px;
+              color: #9ca3af;
+              font-size: 9px;
+              margin-left: 3px;
+              font-weight: 400;
             }
           }
 
           .sales {
-            font-size: 10px;
+            font-size: 9px;
             color: #9ca3af;
+            transform: scale(0.92);
+            transform-origin: right center;
           }
         }
       }
@@ -452,59 +453,19 @@
   }
 }
 
-/* 底部间距 */
-.bottom-space {
-  height: 20px;
-}
 
-/* 响应式 */
-@media (max-width: 375px) {
-  .banner-section .home-swiper .banner-item {
-    height: 160px;
-  }
-
-  .quick-actions .action-item .action-icon {
-    width: 48px;
-    height: 48px;
-  }
-
-  .recommend-section .product-grid .product-card .product-image {
-    height: 120px;
-  }
-}
-
-/* 动画 */
+// 动画
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.banner-section {
-  animation: fadeInUp 0.5s ease;
+.home-page > div {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.feature-tags {
-  animation: fadeInUp 0.5s ease 0.1s both;
-}
-
-.quick-actions {
-  animation: fadeInUp 0.5s ease 0.2s both;
-}
-
-.core-feature-card {
-  animation: fadeInUp 0.5s ease 0.3s both;
-}
-
-.ai-feature-card {
-  animation: fadeInUp 0.5s ease 0.4s both;
-}
-
-.recommend-section {
-  animation: fadeInUp 0.5s ease 0.5s both;
-}
+.banner-section { animation-delay: 0.1s; }
+.feature-tags { animation-delay: 0.2s; }
+.core-feature-card { animation-delay: 0.3s; }
+.ai-feature-card { animation-delay: 0.4s; }
+.recommend-section { animation-delay: 0.5s; }

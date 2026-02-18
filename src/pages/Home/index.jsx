@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { SearchBar, Toast, Badge } from 'antd-mobile';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useNavigate } from 'react-router-dom';
-import './index-new.scss';
+import './index.scss';
 
 // 导入图片资源
+import fishLogo from '../../assets/img/fish.png';
+import scanIcon from '../../assets/img/scan.png';
 import bar1 from '../../assets/img/bar/1.png';
 import bar2 from '../../assets/img/bar/2.png';
 import bar3 from '../../assets/img/bar/3.png';
@@ -15,13 +16,11 @@ import bar4 from '../../assets/img/bar/4.png';
 import bar5 from '../../assets/img/bar/5.png';
 
 // 导入mock数据
-import { fishProducts, categories } from '../../mock/fishProducts';
+import { fishProducts } from '../../mock/fishProducts';
 import { getCart } from '../../mock/cartData';
-import { isLoggedIn } from '../../mock/authService';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState('');
   // 使用初始化函数避免 effect 中 setState 警告
   const [cartCount, setCartCount] = useState(() => {
     const cart = getCart();
@@ -55,14 +54,6 @@ const Home = () => {
     { id: 5, image: bar5, title: '安心食用', subtitle: '严格质检，放心享用' },
   ];
 
-  // 功能入口
-  const quickActions = [
-    { id: 'scan', icon: '📷', text: '扫码溯源', color: '#10b981', path: '/qrcode-scanner' },
-    { id: 'mall', icon: '🛒', text: '鳗鱼商城', color: '#6366f1', path: '/mall' },
-    { id: 'order', icon: '📋', text: '我的订单', color: '#f59e0b', path: '/orderHistory' },
-    { id: 'ai', icon: '🤖', text: 'AI助手', color: '#ec4899', path: null },
-  ];
-
   // 特色标签
   const featureTags = [
     { icon: '✓', text: '厂商直供' },
@@ -70,22 +61,6 @@ const Home = () => {
     { icon: '✓', text: '全程可溯' },
     { icon: '✓', text: '品质保障' },
   ];
-
-  // 处理搜索
-  const handleSearch = (val) => {
-    if (val.trim()) {
-      navigate(`/mall?search=${encodeURIComponent(val)}`);
-    }
-  };
-
-  // 处理快捷操作
-  const handleQuickAction = (item) => {
-    if (item.path) {
-      navigate(item.path);
-    } else if (item.id === 'ai') {
-      Toast.show({ content: 'AI助手即将上线', icon: 'loading' });
-    }
-  };
 
   // 处理商品点击
   const handleProductClick = (product) => {
@@ -101,25 +76,12 @@ const Home = () => {
       <div className="home-header">
         <div className="header-content">
           <div className="logo-area">
-            <span className="logo-icon">🐟</span>
+            <img src={fishLogo} alt="Logo" className='logo-img'/>
             <span className="logo-text">鳗知溯</span>
           </div>
           <div className="header-actions">
-            <div className="action-item" onClick={() => navigate('/qrcode-scanner')}>
-              <span>📷</span>
-            </div>
+            {/* 暂时预留位置，后续可添加消息通知等 */}
           </div>
-        </div>
-
-        {/* 搜索栏 */}
-        <div className="search-wrapper">
-          <SearchBar
-            placeholder="搜索鳗鱼产品..."
-            value={searchValue}
-            onChange={setSearchValue}
-            onSearch={handleSearch}
-            className="home-search"
-          />
         </div>
       </div>
 
@@ -156,34 +118,24 @@ const Home = () => {
         ))}
       </div>
 
-      {/* 快捷入口 */}
-      <div className="quick-actions">
-        {quickActions.map((item) => (
-          <div key={item.id} className="action-item" onClick={() => handleQuickAction(item)}>
-            <div className="action-icon" style={{ background: `${item.color}15` }}>
-              <span style={{ fontSize: '28px' }}>{item.icon}</span>
-            </div>
-            <span className="action-text">{item.text}</span>
-          </div>
-        ))}
-      </div>
-
       {/* 核心功能卡片 */}
       <div className="core-feature-card" onClick={() => navigate('/qrcode-scanner')}>
-        <div className="feature-left">
-          <div className="feature-icon-large">📷</div>
-        </div>
         <div className="feature-content">
-          <h3>扫码溯源</h3>
-          <p>扫描产品二维码，查看完整供应链信息</p>
+          <div className="feature-title-row">
+            <h3>扫码溯源</h3>
+            <span className="feature-badge">热门功能</span>
+          </div>
+          <p>一物一码 · 全程透明可见</p>
           <div className="feature-highlights">
-            <span>🐟 养殖基地</span>
-            <span>🏭 加工厂</span>
-            <span>🚚 物流</span>
-            <span>🏪 销售点</span>
+            <span className="hl-tag">🐟 养殖</span>
+            <span className="hl-tag">🏭 加工</span>
+            <span className="hl-tag">🚚 物流</span>
           </div>
         </div>
-        <div className="feature-arrow">→</div>
+        <div className="feature-image-area">
+          <img src={scanIcon} alt="Scan" className="feature-icon-img" />
+          <div className="scan-btn">立即扫码</div>
+        </div>
       </div>
 
       {/* AI分析卡片 */}
@@ -205,7 +157,7 @@ const Home = () => {
       <div className="recommend-section">
         <div className="section-header">
           <h3>🔥 热销推荐</h3>
-          <span className="view-more" onClick={() => navigate('/mall')}>查看更多 →</span>
+          <span className="view-more" onClick={() => navigate('/mall')}>查看更多 &gt;</span>
         </div>
         <div className="product-grid">
           {recommendProducts.map((product) => (
@@ -234,9 +186,6 @@ const Home = () => {
           ))}
         </div>
       </div>
-
-      {/* 底部间距 */}
-      <div className="bottom-space"></div>
     </div>
   );
 };
