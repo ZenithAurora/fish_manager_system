@@ -180,6 +180,18 @@ export const clearTraceHistory = () => {
 };
 
 /**
+ * 提交用户反馈
+ */
+export const submitFeedback = (feedbackData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('用户反馈提交:', feedbackData);
+      resolve({ success: true, message: '反馈已提交' });
+    }, 800);
+  });
+};
+
+/**
  * Mock用户数据（用于演示）
  */
 export const mockUser = {

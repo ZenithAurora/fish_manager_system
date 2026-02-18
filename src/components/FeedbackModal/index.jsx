@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Toast, TextArea, Input, Button } from 'antd-mobile';
-import { submitFeedback } from '../../mock/adminService';
-import { getCurrentUser } from '../../mock/userData';
+import { getCurrentUser, submitFeedback } from '../../mock/userData';
 import './index.scss';
 
 const FeedbackModal = ({ visible, onClose }) => {
