@@ -15,9 +15,10 @@ import bar4 from '../../assets/img/bar/4.png';
 import bar5 from '../../assets/img/bar/5.png';
 
 // 导入mock数据
-import { fishProducts, categories } from '../../mock/fishProducts';
+import { fishProducts, categories, getFishById } from '../../mock/fishProducts';
 import { getCart } from '../../mock/cartData';
 import { isLoggedIn } from '../../mock/authService';
+import { getTraceHistory } from '../../mock/userData';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -83,7 +84,40 @@ const Home = () => {
     if (item.path) {
       navigate(item.path);
     } else if (item.id === 'ai') {
-      Toast.show({ content: 'AI助手即将上线', icon: 'loading' });
+      try {
+        const history = getTraceHistory();
+        if (!history.length) {
+          Toast.show({
+            content: '暂无溯源记录，请先通过扫码或商品详情查看溯源信息后再试',
+            icon: 'fail',
+          });
+          return;
+        }
+
+        const latest = history[0];
+        const fish = getFishById(latest.fishId);
+
+        if (!fish) {
+          Toast.show({
+            content: '未找到最近溯源对应的商品，请重新扫码后使用AI助手',
+            icon: 'fail',
+          });
+          return;
+        }
+
+        localStorage.setItem('currentScanProduct', JSON.stringify(fish));
+        navigate('/scan-result', {
+          state: {
+            source: 'home-ai',
+            openAI: true,
+          },
+        });
+      } catch (e) {
+        Toast.show({
+          content: 'AI助手启动失败，请稍后重试',
+          icon: 'fail',
+        });
+      }
     }
   };
 

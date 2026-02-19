@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavBar, Button, Toast } from 'antd-mobile';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './index.scss';
 
 // 导入Mock数据
@@ -16,6 +16,7 @@ import qrCodeImage from '../../assets/img/qrCodeMock/qrcode.jpg';
 
 const ScannerResult = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [product, setProduct] = useState(null);
   const [traceChain, setTraceChain] = useState([]);
   const [expandedNodeId, setExpandedNodeId] = useState(null);
@@ -54,8 +55,13 @@ const ScannerResult = () => {
       addTraceHistory(fishData);
       
       setLoading(false);
+
+      // 如果是从首页AI入口打开，则在数据加载完成后自动唤起AI助手
+      if (location.state?.openAI) {
+        setShowAIAnalysis(true);
+      }
     }, 800);
-  }, [navigate]);
+  }, [navigate, location]);
 
   // 返回
   const handleBack = () => {
