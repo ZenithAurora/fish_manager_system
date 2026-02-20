@@ -21,7 +21,7 @@ const QRCodeScanner = () => {
   useEffect(() => {
     const authorized = localStorage.getItem('isAuthorized');
     if (!authorized) {
-      navigate('/authorization');
+      navigate('/login');
     }
     
       // 清理函数

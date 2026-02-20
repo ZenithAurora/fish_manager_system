@@ -4,7 +4,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useNavigate } from 'react-router-dom';
-import './index.scss';
+import styles from './index.module.scss';
 
 // 导入图片资源
 import fishLogo from '../../assets/img/fish.png';
@@ -31,7 +31,7 @@ const Home = () => {
   useEffect(() => {
     const authorized = localStorage.getItem('isAuthorized');
     if (!authorized) {
-      navigate('/authorization');
+      navigate('/login');
     }
   }, [navigate]);
 
@@ -69,24 +69,23 @@ const Home = () => {
 
   // 推荐商品（取前4个）
   const recommendProducts = fishProducts.slice(0, 4);
-
   return (
-    <div className="home-page">
+    <div className={styles.homePage}>
       {/* 顶部区域 */}
-      <div className="home-header">
-        <div className="header-content">
-          <div className="logo-area">
-            <img src={fishLogo} alt="Logo" className='logo-img'/>
-            <span className="logo-text">鳗知溯</span>
+      <div className={styles.homeHeader}>
+        <div className={styles.headerContent}>
+          <div className={styles.logoArea}>
+            <img src={fishLogo} alt="Logo" className={styles.logoImg}/>
+            <span className={styles.logoText}>鳗知溯</span>
           </div>
-          <div className="header-actions">
-            {/* 暂时预留位置，后续可添加消息通知等 */}
+          <div className={styles.headerActions}>
+            {/* 暂时预留位置,后续可添加消息通知等 */}
           </div>
         </div>
       </div>
 
       {/* 轮播图 */}
-      <div className="banner-section">
+      <div className={styles.bannerSection}>
         <Swiper
           className="home-swiper"
           modules={[Autoplay, Pagination]}
@@ -96,9 +95,9 @@ const Home = () => {
         >
           {bannerData.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="banner-item">
+              <div className={styles.bannerItem}>
                 <img src={item.image} alt={item.title} />
-                <div className="banner-overlay">
+                <div className={styles.bannerOverlay}>
                   <h3>{item.title}</h3>
                   <p>{item.subtitle}</p>
                 </div>
@@ -109,44 +108,44 @@ const Home = () => {
       </div>
 
       {/* 特色标签 */}
-      <div className="feature-tags">
+      <div className={styles.featureTags}>
         {featureTags.map((tag, idx) => (
-          <div key={idx} className="tag-item">
-            <span className="tag-icon">{tag.icon}</span>
-            <span className="tag-text">{tag.text}</span>
+          <div key={idx} className={styles.tagItem}>
+            <span className={styles.tagIcon}>{tag.icon}</span>
+            <span className={styles.tagText}>{tag.text}</span>
           </div>
         ))}
       </div>
 
       {/* 核心功能卡片 */}
-      <div className="core-feature-card" onClick={() => navigate('/qrcode-scanner')}>
-        <div className="feature-content">
-          <div className="feature-title-row">
+      <div className={styles.coreFeatureCard} onClick={() => navigate('/qrcode-scanner')}>
+        <div className={styles.featureContent}>
+          <div className={styles.featureTitleRow}>
             <h3>扫码溯源</h3>
-            <span className="feature-badge">热门功能</span>
+            <span className={styles.featureBadge}>热门功能</span>
           </div>
           <p>一物一码 · 全程透明可见</p>
-          <div className="feature-highlights">
-            <span className="hl-tag">🐟 养殖</span>
-            <span className="hl-tag">🏭 加工</span>
-            <span className="hl-tag">🚚 物流</span>
+          <div className={styles.featureHighlights}>
+            <span className={styles.hlTag}>🐟 养殖</span>
+            <span className={styles.hlTag}>🏭 加工</span>
+            <span className={styles.hlTag}>🚚 物流</span>
           </div>
         </div>
-        <div className="feature-image-area">
-          <img src={scanIcon} alt="Scan" className="feature-icon-img" />
-          <div className="scan-btn">立即扫码</div>
+        <div className={styles.featureImageArea}>
+          <img src={scanIcon} alt="Scan" className={styles.featureIconImg} />
+          <div className={styles.scanBtn}>立即扫码</div>
         </div>
       </div>
 
       {/* AI分析卡片 */}
-      <div className="ai-feature-card">
-        <div className="ai-header">
-          <span className="ai-icon">🤖</span>
-          <span className="ai-title">AI智能分析</span>
-          <span className="ai-badge">NEW</span>
+      <div className={styles.aiFeatureCard}>
+        <div className={styles.aiHeader}>
+          <span className={styles.aiIcon}>🤖</span>
+          <span className={styles.aiTitle}>AI智能分析</span>
+          <span className={styles.aiBadge}>NEW</span>
         </div>
-        <p className="ai-desc">基于多模态AI技术，为您提供鳗鱼营养分析、烹饪建议和食用指南</p>
-        <div className="ai-tags">
+        <p className={styles.aiDesc}>基于多模态AI技术，为您提供鳗鱼营养分析、烹饪建议和食用指南</p>
+        <div className={styles.aiTags}>
           <span>营养分析</span>
           <span>烹饪推荐</span>
           <span>健康提示</span>
@@ -154,32 +153,32 @@ const Home = () => {
       </div>
 
       {/* 热销推荐 */}
-      <div className="recommend-section">
-        <div className="section-header">
+      <div className={styles.recommendSection}>
+        <div className={styles.sectionHeader}>
           <h3>🔥 热销推荐</h3>
-          <span className="view-more" onClick={() => navigate('/mall')}>查看更多 &gt;</span>
+          <span className={styles.viewMore} onClick={() => navigate('/mall')}>查看更多 &gt;</span>
         </div>
-        <div className="product-grid">
+        <div className={styles.productGrid}>
           {recommendProducts.map((product) => (
-            <div key={product.id} className="product-card" onClick={() => handleProductClick(product)}>
-              <div className="product-image">
+            <div key={product.id} className={styles.productCard} onClick={() => handleProductClick(product)}>
+              <div className={styles.productImage}>
                 <img src={product.image} alt={product.name} />
                 {product.tags && product.tags[0] && (
-                  <span className="product-tag">{product.tags[0]}</span>
+                  <span className={styles.productTag}>{product.tags[0]}</span>
                 )}
               </div>
-              <div className="product-info">
-                <h4 className="product-name">{product.name}</h4>
-                <p className="product-subtitle">{product.subtitle}</p>
-                <div className="product-footer">
-                  <div className="product-price">
-                    <span className="currency">¥</span>
-                    <span className="price">{product.price.toFixed(0)}</span>
+              <div className={styles.productInfo}>
+                <h4 className={styles.productName}>{product.name}</h4>
+                <p className={styles.productSubtitle}>{product.subtitle}</p>
+                <div className={styles.productFooter}>
+                  <div className={styles.productPrice}>
+                    <span className={styles.currency}>¥</span>
+                    <span className={styles.price}>{product.price.toFixed(0)}</span>
                     {product.originalPrice && (
-                      <span className="original-price">¥{product.originalPrice}</span>
+                      <span className={styles.originalPrice}>¥{product.originalPrice}</span>
                     )}
                   </div>
-                  <span className="sales">{product.sales}人购买</span>
+                  <span className={styles.sales}>{product.sales}人购买</span>
                 </div>
               </div>
             </div>

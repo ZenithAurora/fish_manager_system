@@ -26,7 +26,7 @@ const ScannerResult = () => {
   useEffect(() => {
     const authorized = localStorage.getItem('isAuthorized');
     if (!authorized) {
-      navigate('/authorization');
+      navigate('/login');
       return;
     }
 
