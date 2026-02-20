@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavBar, Button, Toast } from 'antd-mobile';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
 import './index.scss';
 
 // 导入Mock数据
@@ -80,15 +79,20 @@ const ScannerResult = () => {
       const trace = getTraceByFishId(fishData.id);
       setTraceChain(trace);
       addTraceHistory(fishData);
-      
-      setLoading(false);
-
       // 如果是从首页AI入口打开，则在数据加载完成后自动唤起AI助手
       if (location.state?.openAI) {
         setShowAIAnalysis(true);
       }
-    }, 800);
+    };
+
+    // 稍微延迟加载，模拟真实感
+    const timer = setTimeout(prepareData, 800);
+    return () => clearTimeout(timer);
   }, [navigate, location]);
+
+  const handleTraceComplete = () => {
+    setLoading(false);
+  };
 
   const handleBack = () => {
     navigate(-1);
