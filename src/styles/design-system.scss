@@ -5,16 +5,16 @@
 
 // ========== 设计令牌 (Design Tokens) ==========
 :root {
-  // 品牌色系 - 淘宝橙色 + 渐变时尚
-  --color-primary: #ff5000;
-  --color-primary-light: #ff7800;
-  --color-primary-dark: #e64200;
-  --color-secondary: #00b96b;
-  --color-accent: #1677ff;
+  // 品牌色系 - 鳗知溯绿色 + 玻璃质感
+  --color-primary: #10b981;
+  --color-primary-light: #34d399;
+  --color-primary-dark: #059669;
+  --color-secondary: #0ea5e9;
+  --color-accent: #8b5cf6;
   
   // 渐变色系 - 现代渐变效果
-  --gradient-primary: linear-gradient(135deg, #ff5000 0%, #ff7800 100%);
-  --gradient-secondary: linear-gradient(135deg, #00b96b 0%, #00d684 100%);
+  --gradient-primary: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
   --gradient-accent: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
   --gradient-premium: linear-gradient(135deg, #722ed1 0%, #eb2f96 100%);
   

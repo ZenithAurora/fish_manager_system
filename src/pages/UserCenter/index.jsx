@@ -15,7 +15,7 @@ import {
 import { getCurrentUser, getTraceHistory } from '../../mock/userData';
 import { mockLogout, isLoggedIn } from '../../mock/authService';
 import { getOrders } from '../../mock/orderData';
-import FooterNav from '../../components/FooterNav';
+// FooterNav 由 App.jsx 控制显示，这里不需要单独引入
 import FeedbackModal from '../../components/FeedbackModal';
 import './index.scss';
 
@@ -33,7 +33,7 @@ const UserCenter = () => {
   // 加载用户数据
   useEffect(() => {
     if (!isLoggedIn()) {
-      navigate('/authorization');
+      navigate('/login');
       return;
     }
     
@@ -67,7 +67,8 @@ const UserCenter = () => {
     if (result) {
       await mockLogout();
       Toast.show({ content: '已退出登录', icon: 'success' });
-      navigate('/authorization');
+      localStorage.clear();
+      navigate('/login');
     }
   };
 
@@ -222,8 +223,7 @@ const UserCenter = () => {
         <span>鳗知溯系统 v1.0.0</span>
       </div>
 
-      {/* 底部导航 */}
-      <FooterNav />
+      {/* FooterNav 由 App.jsx 统一控制显示，这里不需要 */}
 
       {/* 反馈弹窗 */}
       <FeedbackModal

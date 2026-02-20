@@ -1,0 +1,205 @@
+/* 登录页面样式 - CSS模块化 */
+.loginPage {
+  height: 100vh;
+  background: linear-gradient(145deg, #f0fdf4 0%, #f8fafc 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+
+  // 抽象装饰光晕
+  &::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+  }
+}
+
+.loginHeader {
+  margin-top: 60px;
+  margin-bottom: 40px;
+  z-index: 1;
+  text-align: left;
+
+  .appLogo {
+    width: 64px;
+    height: 64px;
+    background: #ffffff1b;
+    backdrop-filter: blur(15px);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.loginCard {
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+  z-index: 1;
+
+  // :global用于处理antd-mobile组件样式
+  :global {
+    .adm-input {
+      --font-size: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+      
+      &::placeholder {
+        color: #d1d5db;
+      }
+    }
+  }
+}
+
+.tabSwitch {
+  display: flex;
+  margin-bottom: 32px;
+  border-bottom: 1px solid #f3f4f6;
+
+  .tabItem {
+    margin-right: 24px;
+    padding-bottom: 12px;
+    font-size: 16px;
+    color: #9ca3af;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &.active {
+      color: #1f2937;
+      font-weight: 600;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #10b981;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+.loginForm {
+  // 表单样式
+}
+
+.formItem {
+  margin-bottom: 24px;
+
+  label {
+    display: block;
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+}
+
+.verifyCodeGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  :global(.adm-input) {
+    flex: 1;
+  }
+
+  .codeBtn {
+    flex-shrink: 0;
+    font-size: 14px;
+    padding: 0 12px;
+    height: 36px;
+    border-radius: 18px;
+    white-space: nowrap;
+    --adm-color-primary: #10b981;
+    
+    // 去除点击时的默认阴影和遮罩效果
+    &:active, &:focus {
+      box-shadow: none !important;
+      &::before {
+        display: none !important;
+      }
+    }
+  }
+}
+
+.submitBtn {
+  margin-top: 40px;
+  height: 50px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  // 移除原本的投影
+  box-shadow: none; 
+  background: #10b981;
+  border: none;
+  
+  // 去除点击时的默认阴影和遮罩效果
+  &:active, &:focus {
+    background: color-mix(in srgb, #10b981, black 5%); // 使用现代color-mix函数替代darken
+    box-shadow: none !important;
+    &::before {
+      display: none !important;
+    }
+  }
+}
+
+.loginFooter {
+  margin-top: auto;
+  text-align: center;
+  padding-bottom: 20px;
+  z-index: 1;
+
+  p {
+    font-size: 12px;
+    color: #9ca3af;
+    
+    a {
+      color: #10b981;
+      text-decoration: none;
+    }
+  }
+}

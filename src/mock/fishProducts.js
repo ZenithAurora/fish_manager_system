@@ -2,183 +2,154 @@
  * 鱼类产品Mock数据
  * 包含完整的商品信息，便于后续对接真实接口
  */
-
 import fish1 from '../assets/img/shopping/fish1.jpg';
 import fish2 from '../assets/img/shopping/fish2.jpg';
-import fish3 from '../assets/img/shopping/fish3.webp';
-import fish4 from '../assets/img/shopping/fish4.webp';
-import fish5 from '../assets/img/shopping/fish5.webp';
+import fish3 from '../assets/img/shopping/fish3.jpg';
+import fish4 from '../assets/img/shopping/fish4.jpg';
+import fish5 from '../assets/img/shopping/fish5.jpg';
+import fish6 from '../assets/img/shopping/fish6.jpg';
+import fish7 from '../assets/img/shopping/fish7.jpg';
+import fish8 from '../assets/img/shopping/fish8.jpg';
+import fish9 from '../assets/img/shopping/fish9.jpg';
+import fish10 from '../assets/img/shopping/fish10.jpg';
 
-export const fishProducts = [
-  {
-    id: 'FISH001',
-    name: '阳春镇特产·鲜活鳗鱼',
-    subtitle: '生态养殖 肉质鲜嫩',
-    price: 128.00,
-    originalPrice: 168.00,
-    unit: '约500g/条',
-    image: fish1,
-    images: [fish1],
-    tags: ['热销', '有机认证'],
-    category: 'fresh',
-    origin: '四川省宜宾市江安县阳春镇',
-    producer: '七彩湖特种水产养殖公司',
-    productionDate: '2025-01-23',
-    shelfLife: '冷藏3天/冷冻30天',
-    storage: '0-4℃冷藏保存',
-    nutrition: {
-      protein: '18.2g/100g',
-      fat: '12.5g/100g',
-      calories: '189kcal/100g',
-      omega3: '2.1g/100g'
-    },
-    description: '来自四川江安阳春镇的优质鳗鱼，采用生态养殖方式，水质优良，肉质细嫩鲜美。富含优质蛋白和Omega-3脂肪酸，是健康饮食的优选。',
-    sales: 2341,
-    rating: 4.9,
-    stock: 156,
-    qrCode: 'TRACE-FISH001-2025'
-  },
-  {
-    id: 'FISH002',
-    name: '日式蒲烧鳗鱼',
-    subtitle: '即食美味 开袋即享',
-    price: 89.00,
-    originalPrice: 118.00,
-    unit: '200g/袋',
-    image: fish2,
-    images: [fish2],
-    tags: ['即食', '人气爆款'],
-    category: 'processed',
-    origin: '浙江省杭州市',
-    producer: '杭州鳗香食品有限公司',
-    productionDate: '2025-01-20',
-    shelfLife: '冷冻180天',
-    storage: '-18℃以下冷冻保存',
-    nutrition: {
-      protein: '16.5g/100g',
-      fat: '15.2g/100g',
-      calories: '245kcal/100g',
-      omega3: '1.8g/100g'
-    },
-    description: '精选优质鳗鱼，采用传统日式蒲烧工艺，酱汁浓郁，口感软糯。微波加热3分钟即可享用，配米饭绝佳搭配。',
-    sales: 5621,
-    rating: 4.8,
-    stock: 328,
-    qrCode: 'TRACE-FISH002-2025'
-  },
-  {
-    id: 'FISH003',
-    name: '野生深海鳗鱼段',
-    subtitle: '深海捕捞 原生态美味',
-    price: 198.00,
-    originalPrice: 258.00,
-    unit: '约600g/份',
-    image: fish3,
-    images: [fish3],
-    tags: ['野生', '限量'],
-    category: 'fresh',
-    origin: '福建省宁德市霞浦县',
-    producer: '霞浦海源水产有限公司',
-    productionDate: '2025-01-22',
-    shelfLife: '冷藏2天/冷冻30天',
-    storage: '0-4℃冷藏保存',
-    nutrition: {
-      protein: '19.8g/100g',
-      fat: '10.2g/100g',
-      calories: '175kcal/100g',
-      omega3: '2.5g/100g'
-    },
-    description: '来自东海深海的野生鳗鱼，自然生长，肉质紧实，营养丰富。每日限量供应，新鲜直达。',
-    sales: 892,
-    rating: 4.95,
-    stock: 45,
-    qrCode: 'TRACE-FISH003-2025'
-  },
-  {
-    id: 'FISH004',
-    name: '有机黑鳗礼盒',
-    subtitle: '送礼佳品 尊贵之选',
-    price: 388.00,
-    originalPrice: 488.00,
-    unit: '1000g礼盒装',
-    image: fish4,
-    images: [fish4],
-    tags: ['礼盒', '有机认证'],
-    category: 'gift',
-    origin: '广东省台山市',
-    producer: '台山绿源生态渔业',
-    productionDate: '2025-01-21',
-    shelfLife: '冷冻90天',
-    storage: '-18℃以下冷冻保存',
-    nutrition: {
-      protein: '20.1g/100g',
-      fat: '11.8g/100g',
-      calories: '192kcal/100g',
-      omega3: '2.3g/100g'
-    },
-    description: '精选台山有机黑鳗，通过国家有机认证。精美礼盒包装，适合节日送礼、商务馈赠。含两条整鳗，附赠蒲烧酱料包。',
-    sales: 456,
-    rating: 4.85,
-    stock: 78,
-    qrCode: 'TRACE-FISH004-2025'
-  },
-  {
-    id: 'FISH005',
-    name: '鳗鱼寿司料',
-    subtitle: '料理专用 品质保证',
-    price: 68.00,
-    originalPrice: 88.00,
-    unit: '150g/盒',
-    image: fish5,
-    images: [fish5],
-    tags: ['料理', '特惠'],
-    category: 'processed',
-    origin: '江苏省南通市',
-    producer: '南通海味坊食品',
-    productionDate: '2025-01-19',
-    shelfLife: '冷冻365天',
-    storage: '-18℃以下冷冻保存',
-    nutrition: {
-      protein: '15.2g/100g',
-      fat: '14.5g/100g',
-      calories: '228kcal/100g',
-      omega3: '1.6g/100g'
-    },
-    description: '专为寿司料理设计的鳗鱼片，厚度均匀，口感软糯。预调味处理，解冻后可直接使用，在家轻松做出餐厅级鳗鱼寿司。',
-    sales: 3256,
-    rating: 4.7,
-    stock: 512,
-    qrCode: 'TRACE-FISH005-2025'
-  },
-  {
-    id: 'FISH006',
-    name: '清蒸鳗鱼整条',
-    subtitle: '清淡养生 老少皆宜',
-    price: 158.00,
-    originalPrice: 198.00,
-    unit: '约450g/条',
-    image: fish1,
-    images: [fish1],
-    tags: ['养生', '推荐'],
-    category: 'fresh',
-    origin: '江西省鄱阳湖',
-    producer: '鄱阳湖生态渔业合作社',
-    productionDate: '2025-01-23',
-    shelfLife: '冷藏3天/冷冻30天',
-    storage: '0-4℃冷藏保存',
-    nutrition: {
-      protein: '17.8g/100g',
-      fat: '11.2g/100g',
-      calories: '178kcal/100g',
-      omega3: '2.0g/100g'
-    },
-    description: '鄱阳湖天然水域养殖，水质纯净无污染。适合清蒸、炖汤等清淡做法，保留鳗鱼原始鲜味，适合追求健康饮食的人群。',
-    sales: 1823,
-    rating: 4.85,
-    stock: 203,
-    qrCode: 'TRACE-FISH006-2025'
-  }
+const fishImages = [
+  fish1, fish2, fish3, fish4, fish5,
+  fish6, fish7, fish8, fish9, fish10
 ];
+
+// 模拟图片路径（保持原有命名规则）
+const getImagePath = (index) => {
+  // 循环使用5张图片，保证图片路径格式统一
+  return fishImages[index % 10];
+};
+
+// 基础数据模板 - 用于生成多样化的商品信息
+const baseData = {
+  // 产地列表
+  origins: [
+    '四川省宜宾市江安县阳春镇', '浙江省杭州市', '福建省宁德市霞浦县',
+    '广东省台山市', '江苏省南通市', '江西省鄱阳湖', '山东省青岛市',
+    '辽宁省大连市', '广东省中山市', '福建省福州市', '江苏省苏州市',
+    '浙江省宁波市', '广东省珠海市', '海南省海口市', '广西省北海市'
+  ],
+  // 生产商列表
+  producers: [
+    '七彩湖特种水产养殖公司', '杭州鳗香食品有限公司', '霞浦海源水产有限公司',
+    '台山绿源生态渔业', '南通海味坊食品', '鄱阳湖生态渔业合作社',
+    '青岛远洋水产有限公司', '大连海之韵渔业', '中山恒兴水产',
+    '福州海源食品厂', '苏州渔乐圈食品', '宁波海味鲜食品',
+    '珠海蓝海渔业', '海口南海渔业', '北海银滩水产'
+  ],
+  // 商品名称前缀
+  namePrefixes: ['鲜活', '野生', '有机', '冷冻', '即食', '精选', '特级', '原生态'],
+  // 商品名称后缀
+  nameSuffixes: ['鳗鱼', '鳗鱼段', '鳗鱼柳', '鳗鱼丸', '鳗鱼干', '鳗鱼礼盒', '鳗鱼寿司料', '蒲烧鳗鱼'],
+  // 副标题模板
+  subtitles: [
+    '生态养殖 肉质鲜嫩', '即食美味 开袋即享', '深海捕捞 原生态美味',
+    '送礼佳品 尊贵之选', '料理专用 品质保证', '清淡养生 老少皆宜',
+    '新鲜直达 产地直供', '无添加 健康安全', '肉质紧实 口感鲜美'
+  ],
+  // 标签组合
+  tagGroups: [
+    ['热销', '有机认证'], ['即食', '人气爆款'], ['野生', '限量'],
+    ['礼盒', '有机认证'], ['料理', '特惠'], ['养生', '推荐'],
+    ['新品', '包邮'], ['产地直供', '新鲜'], ['高蛋白', '低脂肪']
+  ],
+  // 单位选项
+  units: [
+    '约500g/条', '200g/袋', '约600g/份', '1000g礼盒装', '150g/盒',
+    '约450g/条', '300g/包', '800g/箱', '250g/份', '400g/袋'
+  ],
+  // 分类
+  categories: ['fresh', 'processed', 'gift'],
+  // 保质期选项
+  shelfLifes: [
+    '冷藏3天/冷冻30天', '冷冻180天', '冷藏2天/冷冻30天',
+    '冷冻90天', '冷冻365天', '冷藏1天/冷冻60天'
+  ],
+  // 储存条件
+  storages: [
+    '0-4℃冷藏保存', '-18℃以下冷冻保存', '0-2℃冷藏保存',
+    '-20℃以下冷冻保存', '常温避光保存'
+  ]
+};
+
+// 生成随机日期（2025年1月）
+const getRandomDate = () => {
+  const day = Math.floor(Math.random() * 25) + 1;
+  const dayStr = day < 10 ? `0${day}` : day;
+  return `2025-01-${dayStr}`;
+};
+
+// 生成随机营养数据
+const getRandomNutrition = () => {
+  return {
+    protein: `${(15 + Math.random() * 5).toFixed(1)}g/100g`,
+    fat: `${(10 + Math.random() * 5).toFixed(1)}g/100g`,
+    calories: `${(170 + Math.random() * 80).toFixed(0)}kcal/100g`,
+    omega3: `${(1.5 + Math.random() * 1).toFixed(1)}g/100g`
+  };
+};
+
+// 生成随机描述
+const getRandomDescription = (origin, name) => {
+  const descTemplates = [
+    `来自${origin}的优质${name}，采用生态养殖方式，水质优良，肉质细嫩鲜美。富含优质蛋白和Omega-3脂肪酸，是健康饮食的优选。`,
+    `精选${origin}产${name}，传统工艺制作，口感软糯。加热即食，是家庭餐桌的美味选择。`,
+    `${origin}深海捕捞的${name}，自然生长，肉质紧实，营养丰富。新鲜直达，保证品质。`,
+    `${origin}特产${name}，有机认证，无添加防腐剂。精美包装，适合送礼和自用。`,
+    `专为料理设计的${origin}${name}，厚度均匀，口感佳。在家轻松做出餐厅级美食。`
+  ];
+  return descTemplates[Math.floor(Math.random() * descTemplates.length)];
+};
+
+// 生成100条鳗鱼产品数据
+export const fishProducts = Array.from({ length: 100 }, (_, index) => {
+  const id = `FISH${String(index + 1).padStart(3, '0')}`;
+  const randomOrigin = baseData.origins[Math.floor(Math.random() * baseData.origins.length)];
+  const randomProducer = baseData.producers[Math.floor(Math.random() * baseData.producers.length)];
+  const randomNamePrefix = baseData.namePrefixes[Math.floor(Math.random() * baseData.namePrefixes.length)];
+  const randomNameSuffix = baseData.nameSuffixes[Math.floor(Math.random() * baseData.nameSuffixes.length)];
+  const randomSubtitle = baseData.subtitles[Math.floor(Math.random() * baseData.subtitles.length)];
+  const randomTags = baseData.tagGroups[Math.floor(Math.random() * baseData.tagGroups.length)];
+  const randomCategory = baseData.categories[Math.floor(Math.random() * baseData.categories.length)];
+  const randomUnit = baseData.units[Math.floor(Math.random() * baseData.units.length)];
+  const randomShelfLife = baseData.shelfLifes[Math.floor(Math.random() * baseData.shelfLifes.length)];
+  const randomStorage = baseData.storages[Math.floor(Math.random() * baseData.storages.length)];
+  
+  // 价格生成（保证有合理的折扣）
+  const originalPrice = (80 + Math.random() * 400).toFixed(2);
+  const discountRate = 0.7 + Math.random() * 0.25; // 7-9.5折
+  const price = (parseFloat(originalPrice) * discountRate).toFixed(2);
+
+  const image = getImagePath(index);
+  
+  return {
+    id,
+    name: `${randomNamePrefix}${randomNameSuffix}`,
+    subtitle: randomSubtitle,
+    price: parseFloat(price),
+    originalPrice: parseFloat(originalPrice),
+    unit: randomUnit,
+    image,
+    images: [image],
+    tags: randomTags,
+    category: randomCategory,
+    origin: randomOrigin,
+    producer: randomProducer,
+    productionDate: getRandomDate(),
+    shelfLife: randomShelfLife,
+    storage: randomStorage,
+    nutrition: getRandomNutrition(),
+    description: getRandomDescription(randomOrigin, randomNameSuffix),
+    sales: Math.floor(Math.random() * 6000 + 100), // 销量100-6100
+    rating: (4.5 + Math.random() * 0.5).toFixed(2), // 评分4.5-5.0
+    stock: Math.floor(Math.random() * 600 + 10), // 库存10-610
+    qrCode: `TRACE-${id}-2025`
+  };
+});
 
 /**
  * 商品分类

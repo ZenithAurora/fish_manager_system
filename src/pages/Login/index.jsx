@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '../../mock/authService';
 import { mockUser, saveUser } from '../../mock/userData';
 import fishLogo from '../../assets/img/fish.png';
-import './index.scss';
+import styles from './index.module.scss';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -108,28 +108,28 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className={styles.loginPage}>
       {/* 头部Logo区 */}
-      <div className="login-header">
-        <div className="app-logo">
-          <img src={fishLogo} alt="Logo" className='logo'/>
+      <div className={styles.loginHeader}>
+        <div className={styles.appLogo}>
+          <img src={fishLogo} alt="Logo" />
         </div>
         <h1>欢迎回来</h1>
         <p>登录鳗知溯，开启溯源之旅</p>
       </div>
 
       {/* 登录卡片 */}
-      <div className="login-card">
+      <div className={styles.loginCard}>
         {/* 切换Tab */}
-        <div className="tab-switch">
+        <div className={styles.tabSwitch}>
           <div 
-            className={`tab-item ${loginType === 'phone' ? 'active' : ''}`}
+            className={`${styles.tabItem} ${loginType === 'phone' ? styles.active : ''}`}
             onClick={() => setLoginType('phone')}
           >
             手机号登录
           </div>
           <div 
-            className={`tab-item ${loginType === 'username' ? 'active' : ''}`}
+            className={`${styles.tabItem} ${loginType === 'username' ? styles.active : ''}`}
             onClick={() => setLoginType('username')}
           >
             账号密码
@@ -138,8 +138,8 @@ const Login = () => {
 
         {/* 手机号登录表单 */}
         {loginType === 'phone' && (
-          <div className="login-form">
-            <div className="form-item">
+          <div className={styles.loginForm}>
+            <div className={styles.formItem}>
               <label>手机号码</label>
               <Input
                 placeholder="请输入手机号"
@@ -149,9 +149,9 @@ const Login = () => {
                 clearable
               />
             </div>
-            <div className="form-item">
+            <div className={styles.formItem}>
               <label>验证码</label>
-              <div className="verify-code-group">
+              <div className={styles.verifyCodeGroup}>
                 <Input
                   placeholder="请输入验证码"
                   value={verifyCode}
@@ -163,7 +163,7 @@ const Login = () => {
                   size="small" 
                   color="primary" 
                   fill="outline"
-                  className="code-btn"
+                  className={styles.codeBtn}
                   disabled={countdown > 0 || !phone}
                   onClick={handleSendCode}
                 >
@@ -175,7 +175,7 @@ const Login = () => {
             <Button 
               block 
               color="primary" 
-              className="submit-btn"
+              className={styles.submitBtn}
               loading={loading}
               onClick={handlePhoneLogin}
               ripple={false} 
@@ -187,8 +187,8 @@ const Login = () => {
 
         {/* 账号密码登录表单 */}
         {loginType === 'username' && (
-          <div className="login-form">
-            <div className="form-item">
+          <div className={styles.loginForm}>
+            <div className={styles.formItem}>
               <label>账号</label>
               <Input
                 placeholder="请输入用户名"
@@ -197,7 +197,7 @@ const Login = () => {
                 clearable
               />
             </div>
-            <div className="form-item">
+            <div className={styles.formItem}>
               <label>密码</label>
               <Input
                 placeholder="请输入密码"
@@ -211,7 +211,7 @@ const Login = () => {
             <Button 
               block 
               color="primary" 
-              className="submit-btn"
+              className={styles.submitBtn}
               loading={loading}
               onClick={handleUsernameLogin}
             >
@@ -222,7 +222,7 @@ const Login = () => {
       </div>
 
       {/* 底部协议 */}
-      <div className="login-footer">
+      <div className={styles.loginFooter}>
         <p>
           登录即代表同意 <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
         </p>
