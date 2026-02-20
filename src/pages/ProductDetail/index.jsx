@@ -6,6 +6,10 @@ import './index.scss';
 // 导入Mock数据
 import { addToCart, getItemQuantity } from '../../mock/cartData';
 import { getTraceByFishId, getTraceStats } from '../../mock/traceData';
+import { isFavorited, toggleFavorite } from '../../mock/favoritesData';
+
+// 导入组件
+import QRCodeModal from '../../components/QRCodeModal';
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -14,6 +18,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showSpec, setShowSpec] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
   const [traceStats, setTraceStats] = useState(null);
 
   // 获取商品数据
@@ -25,8 +30,7 @@ const ProductDetail = () => {
       const stats = getTraceStats(productData.id);
       setTraceStats(stats);
       // 检查收藏状态
-      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-      setIsFavorite(favorites.some(item => item.id === productData.id));
+      setIsFavorite(isFavorited(productData.id));
     } else {
       Toast.show({ content: '商品信息加载失败', icon: 'fail' });
       setTimeout(() => navigate(-1), 1500);
@@ -38,18 +42,14 @@ const ProductDetail = () => {
     navigate(-1);
   };
 
-  // 收藏
+  // 收藏/取消收藏
   const handleFavorite = () => {
-    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    if (isFavorite) {
-      favorites = favorites.filter(item => item.id !== product.id);
-      Toast.show({ content: '已取消收藏' });
-    } else {
-      favorites.push(product);
-      Toast.show({ content: '收藏成功', icon: 'success' });
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    setIsFavorite(!isFavorite);
+    const newState = toggleFavorite(product);
+    setIsFavorite(newState);
+    Toast.show({ 
+      content: newState ? '收藏成功' : '已取消收藏',
+      icon: newState ? 'success' : undefined
+    });
   };
 
   // 加入购物车
@@ -89,14 +89,9 @@ const ProductDetail = () => {
   return (
     <div className="product-detail-page">
       {/* 导航栏 */}
-      <NavBar
-        onBack={handleBack}
+      <NavBar 
+        onBack={handleBack} 
         className="detail-nav"
-        right={
-          <span className="nav-share" onClick={() => Toast.show('分享功能开发中')}>
-            📤
-          </span>
-        }
       >
         商品详情
       </NavBar>
@@ -135,30 +130,62 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* 溯源信息卡片 */}
-      <div className="trace-card" onClick={handleViewTrace}>
-        <div className="trace-header">
-          <span className="trace-icon">🔍</span>
-          <span className="trace-title">溯源信息</span>
-          <span className="trace-badge">可追溯</span>
+      {/* 溯源信息卡片 - 极客风全息面板 */}
+      <div className="trace-entrance-card" onClick={handleViewTrace}>
+        {/* 上半部分 (80%) */}
+        <div className="panel-upper">
+          <div className="upper-left">
+            <div className="trace-header">
+              <div className="icon-box">
+                <i className="bi bi-search"></i>
+              </div>
+              <div className="header-info">
+                <h3 className="title">溯源信息</h3>
+                <span className="id-code">ID: {product.id}</span>
+              </div>
+            </div>
+            
+            <div className="product-basic-info">
+              <div className="info-row">
+                <span className="label">产地</span>
+                <span className="value text-ellipsis">{product.origin}</span>
+              </div>
+              <div className="info-row">
+                <span className="label">生产商</span>
+                <span className="value text-ellipsis">{product.producer}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="upper-right">
+            <div 
+              className="trace-qr-box" 
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowQRCode(true);
+              }}
+            >
+              <i className="bi bi-qr-code qr-icon"></i>
+              <span className="qr-text">专属溯源码</span>
+              <span className="qr-hint">点击查看</span>
+            </div>
+          </div>
         </div>
-        <div className="trace-content">
-          <div className="trace-item">
-            <span className="label">产地</span>
-            <span className="value">{product.origin}</span>
+
+        {/* 下半部分 (20%) */}
+        <div className="panel-lower">
+          <div className="lower-left">
+            <span className="tag-item">
+              <i className="bi bi-shield-check tag-icon"></i> 官方认证
+            </span>
+            <span className="tag-item">
+              <i className="bi bi-graph-up tag-icon"></i> 全程监控
+            </span>
           </div>
-          <div className="trace-item">
-            <span className="label">生产商</span>
-            <span className="value">{product.producer}</span>
+          <div className="lower-right">
+            <span className="action-text">查看完整溯源链路</span>
+            <i className="bi bi-arrow-right arrow-icon"></i>
           </div>
-          <div className="trace-item">
-            <span className="label">溯源节点</span>
-            <span className="value highlight">{traceStats?.totalNodes || 5}个环节全程追溯</span>
-          </div>
-        </div>
-        <div className="trace-action">
-          <span>查看完整溯源链路</span>
-          <span className="arrow">→</span>
         </div>
       </div>
 
@@ -272,6 +299,12 @@ const ProductDetail = () => {
           </div>
         </div>
       </Popup>
+
+      <QRCodeModal
+        visible={showQRCode}
+        onClose={() => setShowQRCode(false)}
+        product={product}
+      />
     </div>
   );
 };

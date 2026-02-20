@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavBar, Button, Toast } from 'antd-mobile';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './index.scss';
 
 // 导入Mock数据
@@ -8,20 +9,46 @@ import { getRandomFish, getFishById } from '../../mock/fishProducts';
 import { getTraceByFishId } from '../../mock/traceData';
 import { addTraceHistory } from '../../mock/userData';
 
-// 导入AI分析组件
+// 导入组件
+import TraceLoader from '../../components/TraceLoader';
+import TraceCard from './components/TraceCard';
 import AIAnalysis from '../../components/AIAnalysis';
-
-// 导入图片
-import qrCodeImage from '../../assets/img/qrCodeMock/qrcode.jpg';
+import QRCodeModal from '../../components/QRCodeModal';
 
 const ScannerResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [product, setProduct] = useState(null);
   const [traceChain, setTraceChain] = useState([]);
-  const [expandedNodeId, setExpandedNodeId] = useState(null);
   const [showAIAnalysis, setShowAIAnalysis] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
+  
+  // 实时动态数据
+  const [liveMetrics, setLiveMetrics] = useState({
+    safetyIndex: 99.8,
+    carbon: 0.24,
+    blockHeight: 84920,
+    temperature: 3.6
+  });
+
+  // 模拟实时数据波动
+  useEffect(() => {
+    if (loading) return;
+    
+    const timer = setInterval(() => {
+      setLiveMetrics(prev => ({
+        safetyIndex: Math.min(100, Math.max(98, prev.safetyIndex + (Math.random() - 0.5) * 0.1)),
+        carbon: Math.max(0.1, prev.carbon + (Math.random() - 0.5) * 0.01),
+        blockHeight: prev.blockHeight + (Math.random() > 0.8 ? 1 : 0),
+        temperature: Math.min(5, Math.max(2, prev.temperature + (Math.random() - 0.5) * 0.2))
+      }));
+    }, 2000);
+    
+    return () => clearInterval(timer);
+  }, [loading]);
 
   // 初始化数据
   useEffect(() => {
@@ -31,27 +58,27 @@ const ScannerResult = () => {
       return;
     }
 
-    // 模拟扫码加载
-    setTimeout(() => {
-      // 检查是否有从商品详情页传来的数据
+    const prepareData = () => {
       const savedProduct = localStorage.getItem('currentScanProduct');
+      const locationState = location.state;
       let fishData;
       
-      if (savedProduct) {
+      // 优先从扫码结果获取productId
+      if (locationState?.productId) {
+        fishData = getFishById(locationState.productId);
+        if (!fishData) {
+          fishData = getRandomFish();
+        }
+      } else if (savedProduct) {
         fishData = JSON.parse(savedProduct);
         localStorage.removeItem('currentScanProduct');
       } else {
-        // 随机获取一条鱼
         fishData = getRandomFish();
       }
       
       setProduct(fishData);
-      
-      // 获取溯源链
       const trace = getTraceByFishId(fishData.id);
       setTraceChain(trace);
-      
-      // 添加到溯源历史
       addTraceHistory(fishData);
       
       setLoading(false);
@@ -63,165 +90,177 @@ const ScannerResult = () => {
     }, 800);
   }, [navigate, location]);
 
-  // 返回
   const handleBack = () => {
     navigate(-1);
   };
 
-  // 重新扫描
+  // 模拟区块链验真
+  const handleVerify = () => {
+    setVerifying(true);
+    setTimeout(() => {
+      setVerifying(false);
+      setVerified(true);
+      Toast.show({
+        content: '区块链校验通过！数据真实有效',
+        icon: 'success',
+        duration: 2000
+      });
+    }, 2000);
+  };
+
   const handleRescan = () => {
     navigate('/qrcode-scanner');
   };
 
-  // 点击节点
-  const handleNodeClick = (nodeId) => {
-    setExpandedNodeId(expandedNodeId === nodeId ? null : nodeId);
-  };
-
-  // 复制产品编码
-  const copyProductCode = () => {
-    if (product?.id) {
-      navigator.clipboard.writeText(product.id)
-        .then(() => Toast.show({ content: '已复制产品编码', icon: 'success' }))
-        .catch(() => Toast.show({ content: '复制失败', icon: 'fail' }));
-    }
-  };
-
-  // 加载中
-  if (loading) {
-    return (
-      <div className="scanner-result-page">
-        <NavBar onBack={handleBack}>扫码结果</NavBar>
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p>正在解析溯源信息...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="scanner-result-page">
-      {/* 导航栏 */}
-      <NavBar onBack={handleBack} className="result-nav">
-        扫码结果
+      <TraceLoader visible={loading} onComplete={handleTraceComplete} />
+
+      {/* 沉浸式导航栏 */}
+      <NavBar 
+        onBack={handleBack} 
+        className="result-nav"
+      >
+        溯源档案
       </NavBar>
 
-      {/* 产品信息卡片 */}
-      <div className="product-card">
-        <div className="product-header">
-          <img src={product?.image} alt={product?.name} className="product-image" />
-          <div className="product-info">
-            <h2 className="product-name">{product?.name}</h2>
-            <p className="product-subtitle">{product?.subtitle}</p>
-            <div className="product-status">
-              <span className="status-badge success">✓ 检验合格</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="product-details">
-          <div className="detail-row">
-            <span className="label">产品编码</span>
-            <span className="value clickable" onClick={copyProductCode}>
-              {product?.id} <span className="copy-icon">📋</span>
-            </span>
-          </div>
-          <div className="detail-row">
-            <span className="label">产地</span>
-            <span className="value">{product?.origin}</span>
-          </div>
-          <div className="detail-row">
-            <span className="label">生产商</span>
-            <span className="value">{product?.producer}</span>
-          </div>
-          <div className="detail-row">
-            <span className="label">生产日期</span>
-            <span className="value">{product?.productionDate}</span>
-          </div>
-        </div>
-
-        {/* 二维码 */}
-        <div className="qrcode-section">
-          <img src={qrCodeImage} alt="溯源二维码" className="qrcode-image" />
-          <span className="qrcode-text">产品溯源二维码</span>
-        </div>
-      </div>
-
-      {/* 溯源链条 */}
-      <div className="trace-section">
-        <div className="section-header">
-          <span className="section-icon">🔗</span>
-          <h3 className="section-title">溯源链条</h3>
-          <span className="node-count">{traceChain.length}个节点</span>
-        </div>
-
-        <div className="trace-timeline">
-          {traceChain.map((node, index) => (
-            <div
-              key={node.id}
-              className={`trace-node ${expandedNodeId === node.id ? 'expanded' : ''}`}
-              onClick={() => handleNodeClick(node.id)}
-            >
-              {/* 时间线 */}
-              <div className="timeline-line">
-                <div 
-                  className="timeline-dot" 
-                  style={{ backgroundColor: node.color }}
-                >
-                  {node.icon}
+      {!loading && product && (
+        <div className="content-container">
+          {/* 1. 顶部：全息产品档案卡 (左右分栏布局) */}
+          <div className="holographic-card">
+            <div className="card-bg" style={{ backgroundImage: `url(${product.image})` }}></div>
+            
+            <div className="card-content-row">
+              {/* 左侧：视觉中心 */}
+              <div className="visual-column">
+                <div className="product-image-box">
+                  <img src={product.image} alt={product.name} className="main-img" />
+                  <div className="scan-overlay"></div>
                 </div>
-                {index < traceChain.length - 1 && <div className="timeline-connector"></div>}
-              </div>
-
-              {/* 节点内容 */}
-              <div className="node-content">
-                <div className="node-header">
-                  <h4 className="node-name">{node.name}</h4>
-                  <span className={`node-status ${node.statusType}`}>
-                    {node.status}
-                  </span>
+                {/* 溯源状态指示器 */}
+                <div className="trace-status-bar status-success">
+                  <span className="status-icon"><i className="bi bi-shield-check"></i></span>
+                  <span className="status-text">溯源已通过</span>
                 </div>
                 
-                <div className="node-meta">
-                  <span className="meta-item">📍 {node.address}</span>
-                  <span className="meta-item">🕐 {node.time}</span>
+                {/* 查看专属溯源码按钮 */}
+                <div className="view-qr-btn" onClick={() => setShowQRCode(true)}>
+                  <i className="bi bi-qr-code"></i>
+                  <span>查看专属溯源码</span>
                 </div>
+              </div>
 
-                {/* 展开详情 */}
-                {expandedNodeId === node.id && node.details && (
-                  <div className="node-details">
-                    {Object.entries(node.details).map(([key, value]) => (
-                      <div key={key} className="detail-item">
-                        <span className="detail-key">{key}</span>
-                        <span className="detail-value">{value}</span>
-                      </div>
-                    ))}
+              {/* 右侧：数据中心 */}
+              <div className="info-column">
+                <h1 className="product-title">{product.name}</h1>
+                <div className="product-id">ID: {product.id}</div>
+                
+                {/* 实时动态数据面板 */}
+                <div className="live-metrics-panel">
+                  <div className="metric-row">
+                    <span className="label">安全指数</span>
+                    <span className="value highlight">{liveMetrics.safetyIndex.toFixed(1)}%</span>
                   </div>
-                )}
+                  <div className="metric-bar">
+                    <div className="bar-fill" style={{ width: `${liveMetrics.safetyIndex}%` }}></div>
+                  </div>
+                  
+                  <div className="mini-metrics-grid">
+                    <div className="mini-metric">
+                      <span className="label">碳足迹</span>
+                      <span className="value">{liveMetrics.carbon.toFixed(2)}kg</span>
+                    </div>
+                    <div className="mini-metric">
+                      <span className="label">实时温控</span>
+                      <span className="value">{liveMetrics.temperature.toFixed(1)}°C</span>
+                    </div>
+                  </div>
+                  
+                   <div className="block-info">
+                    <span className="label">Block Height</span>
+                    <span className="value animate-pulse">#{liveMetrics.blockHeight}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
+
+            {/* 底部装饰条 */}
+            <div className="card-footer-decoration">
+              <div className="tech-lines">
+                <span></span><span></span><span></span>
+              </div>
+              <span className="system-ver">UNAGI TRACE V3.0</span>
+            </div>
+          </div>
+
+          {/* 2. 区块链验证模块 */}
+          <div className="verify-section">
+            <div className="verify-header">
+              <span className="icon"><i className="bi bi-shield-lock"></i></span>
+              <span className="title">区块链存证校验</span>
+            </div>
+            <div className="verify-body">
+              <div className="hash-box">
+                <span className="label">ROOT HASH:</span>
+                <span className="code">0x7f83b1...a9c2</span>
+              </div>
+              <Button 
+                className={`verify-btn ${verified ? 'verified' : ''}`} 
+                loading={verifying}
+                onClick={handleVerify}
+                disabled={verified}
+              >
+                {verified ? '✓ 校验通过' : '点击进行链上验真'}
+              </Button>
+            </div>
+          </div>
+
+          {/* 3. 沉浸式溯源时间流 */}
+          <div className="timeline-section">
+            <div className="section-header">
+              <h2 className="section-title">全链路溯源记录</h2>
+              <span className="node-count">共 {traceChain.length} 个节点</span>
+            </div>
+            
+            <div className="timeline-flow">
+              {traceChain.map((node, index) => (
+                <TraceCard 
+                  key={node.id} 
+                  node={node} 
+                  index={index} 
+                  total={traceChain.length} 
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* 4. 底部悬浮操作栏 */}
+          <div className="floating-actions">
+            <div className="action-grid">
+              <Button className="action-btn ai" onClick={() => setShowAIAnalysis(true)}>
+                <span className="icon"><i className="bi bi-bar-chart-line"></i></span>
+                <span className="text">AI 深度质检报告</span>
+              </Button>
+              <Button className="action-btn scan" onClick={handleRescan}>
+                <span className="icon"><i className="bi bi-qr-code-scan"></i></span>
+              </Button>
+            </div>
+          </div>
+
+          <AIAnalysis
+            visible={showAIAnalysis}
+            onClose={() => setShowAIAnalysis(false)}
+            productData={product}
+            traceData={traceChain}
+          />
+
+          <QRCodeModal
+            visible={showQRCode}
+            onClose={() => setShowQRCode(false)}
+            product={product}
+          />
         </div>
-      </div>
-
-      {/* 底部操作 */}
-      <div className="bottom-actions">
-        <Button className="ai-btn" onClick={() => setShowAIAnalysis(true)}>
-          🤖 AI智能分析
-        </Button>
-        <Button className="rescan-btn" onClick={handleRescan}>
-          📷 重新扫描
-        </Button>
-      </div>
-
-      {/* AI分析弹窗 */}
-      <AIAnalysis
-        visible={showAIAnalysis}
-        onClose={() => setShowAIAnalysis(false)}
-        productData={product}
-        traceData={traceChain}
-      />
+      )}
     </div>
   );
 };

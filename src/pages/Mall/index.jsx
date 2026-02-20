@@ -246,7 +246,7 @@ const Mall = () => {
 
           <div className={styles.cartButton} onClick={handleCartClick}>
             <Badge content={cartCount > 0 ? cartCount : null}>
-              <span className={styles.cartIcon}>🛒</span>
+              <span className={styles.cartIcon}><i className="bi bi-cart"></i></span>
             </Badge>
           </div>
         </div>
@@ -278,7 +278,7 @@ const Mall = () => {
             onClick={() => setShowSortMenu(!showSortMenu)}
           >
             <span>{currentSortLabel}</span>
-            <span className={styles.sortIcon}>▼</span>
+            <span className={styles.sortIcon}><i className="bi bi-caret-down-fill" style={{ fontSize: '12px' }}></i></span>
           </div>
           
           {showSortMenu && (
@@ -329,7 +329,7 @@ const Mall = () => {
                   )}
                   {product.originalPrice && (
                     <span className={styles.discountTag}>
-                      {(Math.floor((product.price / product.originalPrice)))}折
+                      {((product.price / product.originalPrice) * 10).toFixed(1)}折
                     </span>
                   )}
                 </div>
@@ -337,7 +337,7 @@ const Mall = () => {
                   <h3 className={styles.productName}>{product.name}</h3>
                   <p className={styles.productSubtitle}>{product.subtitle}</p>
                   <div className={styles.productMeta}>
-                    <span className={styles.rating}>⭐ {product.rating}</span>
+                    <span className={styles.rating}><i className="bi bi-star-fill" style={{ color: '#ffb800' }}></i> {product.rating}</span>
                     <span className={styles.sales}>{product.sales}人购买</span>
                   </div>
                   <div className={styles.productBottom}>

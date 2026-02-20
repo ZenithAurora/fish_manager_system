@@ -53,6 +53,56 @@
       min-height: 100px;
       resize: vertical;
     }
+
+    .label-tip {
+      font-size: 12px;
+      color: #9ca3af;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+
+    .upload-button {
+      width: 80px;
+      height: 80px;
+      border: 1px dashed #d1d5db;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f9fafb;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: #667eea;
+        background: #f3f4f6;
+      }
+
+      .upload-icon {
+        font-size: 24px;
+        color: #9ca3af;
+        margin-bottom: 4px;
+      }
+
+      .upload-text {
+        font-size: 12px;
+        color: #6b7280;
+      }
+    }
+
+    .adm-image-uploader {
+      --cell-size: 80px;
+
+      .adm-image-uploader-cell {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .adm-image-uploader-cell-delete {
+        background: rgba(0, 0, 0, 0.6);
+      }
+    }
   }
   
   .feedback-actions {

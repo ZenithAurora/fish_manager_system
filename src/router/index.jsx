@@ -10,6 +10,11 @@ import OrderHistory from '../pages/OrderHistory';
 import NodeDetail from '../pages/NodeDetail';
 import ProductDetail from '../pages/ProductDetail';
 import OrderConfirm from '../pages/OrderConfirm';
+import TraceHistory from '../pages/TraceHistory';
+import Favorites from '../pages/Favorites';
+import AddressList from '../pages/AddressList';
+import AddressEdit from '../pages/AddressEdit';
+import About from '../pages/About';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +31,12 @@ const router = createBrowserRouter([
       { path: '/node-detail', element: <NodeDetail /> },
       { path: '/product-detail', element: <ProductDetail /> },
       { path: '/order-confirm', element: <OrderConfirm /> },
+      { path: '/trace-history', element: <TraceHistory /> },
+      { path: '/favorites', element: <Favorites /> },
+      { path: '/address-list', element: <AddressList /> },
+      { path: '/address-edit', element: <AddressEdit /> },
+      { path: '/address-edit/:id', element: <AddressEdit /> },
+      { path: '/about', element: <About /> },
       { path: '*', element: <Login /> }, // 任何未知路径都重定向到登录页（或者是404页）
     ],
   },

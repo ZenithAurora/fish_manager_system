@@ -1,222 +1,247 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { NavBar, Toast, Dialog } from 'antd-mobile';
+import { NavBar, Toast, Button, ImageUploader } from 'antd-mobile';
 import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode } from 'html5-qrcode';
+import jsQR from 'jsqr';
 import './index.scss';
-
-// 全局状态追踪器
-let activeCameras = new Set();
 
 const QRCodeScanner = () => {
   const navigate = useNavigate();
-  const [mode, setMode] = useState('camera'); // 'camera' | 'simulation'
-  const [isScanning, setIsScanning] = useState(true);
-  const [countdown, setCountdown] = useState(3);
+  const [mode, setMode] = useState('camera'); // 'camera' | 'upload'
+  const [isScanning, setIsScanning] = useState(false);
   const [scanComplete, setScanComplete] = useState(false);
   const html5QrCodeRef = useRef(null);
-  const countdownTimerRef = useRef(null);
-  const componentIdRef = useRef(`scanner-${Date.now()}`);
+  const isMountedRef = useRef(true);
+  const fileInputRef = useRef(null);
 
   // 初始化权限检查
   useEffect(() => {
     const authorized = localStorage.getItem('isAuthorized');
     if (!authorized) {
       navigate('/login');
+      return;
     }
     
-      // 清理函数
+    isMountedRef.current = true;
+    
     return () => {
-      console.log('Component unmounting, cleaning up camera');
+      isMountedRef.current = false;
       stopCamera();
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     };
   }, [navigate]);
 
-  // 监听模式变化和完成状态
+  // 监听模式切换
   useEffect(() => {
-    if (scanComplete) {
-      stopCamera();
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-      return;
-    }
-
+    if (scanComplete) return;
+    
     if (mode === 'camera') {
-      // 停止倒计时
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-      // 启动摄像头
       startCamera();
     } else {
-      // 停止摄像头
       stopCamera();
-      // 启动模拟倒计时
-      setIsScanning(true);
-      setCountdown(3);
-      startSimulationCountdown();
     }
   }, [mode, scanComplete]);
 
+  // 启动摄像头
   const startCamera = async () => {
     try {
-      // 确保之前的实例已停止
       if (html5QrCodeRef.current) {
         await stopCamera();
       }
-      
-      // 检查并清理其他可能活动的摄像头实例
-      if (activeCameras.size > 0) {
-        console.warn('Multiple active cameras detected, forcing cleanup');
-        // 强制清理所有摄像头（在真实应用中可能需要更精细的管理）
-        const cameraIds = [...activeCameras];
-        for (const cameraId of cameraIds) {
-          if (cameraId !== componentIdRef.current) {
-            // 模拟其他实例的清理
-            console.log(`Cleaning up stray camera instance: ${cameraId}`);
-            activeCameras.delete(cameraId);
-          }
-        }
-      }
-      
-      // 追踪新摄像头实例
-      activeCameras.add(componentIdRef.current);
-      console.log('Starting camera for component:', componentIdRef.current);
-      console.log('Active cameras after start:', [...activeCameras]);
 
       const html5QrCode = new Html5Qrcode("reader");
       html5QrCodeRef.current = html5QrCode;
 
-      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+      const config = { 
+        fps: 10, 
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0
+      };
       
-      // 优先使用后置摄像头
       await html5QrCode.start(
         { facingMode: "environment" },
         config,
-        (decodedText, decodedResult) => {
-          handleScanSuccess(decodedText);
+        (decodedText) => {
+          if (isMountedRef.current) {
+            handleScanSuccess(decodedText);
+          }
         },
-        (errorMessage) => {
-          // 扫描过程中的错误忽略，避免刷屏
-          // console.log(errorMessage);
-        }
+        () => {}
       );
-      setIsScanning(true);
+      
+      if (isMountedRef.current) {
+        setIsScanning(true);
+      }
     } catch (err) {
-      console.error("Error starting scanner", err);
-      // 如果摄像头启动失败，提示用户并切换到模拟模式
-      Dialog.confirm({
-        content: '无法启动摄像头，是否切换到模拟模式？',
-        onConfirm: () => {
-          setMode('simulation');
-        },
-        onCancel: () => {
-            navigate(-1);
-        }
+      console.error("摄像头启动失败:", err);
+      
+      if (!isMountedRef.current) return;
+      
+      let tips = '';
+      if (window.location.protocol === 'http:' && 
+          window.location.hostname !== 'localhost' && 
+          window.location.hostname !== '127.0.0.1') {
+        tips = '\n\n💡 请使用 localhost 访问';
+      } else if (err.name === 'NotAllowedError') {
+        tips = '\n\n请允许访问摄像头权限';
+      } else if (err.name === 'NotFoundError') {
+        tips = '\n\n未检测到摄像头';
+      }
+
+      Toast.show({
+        icon: 'fail',
+        content: '无法启动摄像头' + tips,
+        duration: 3000,
       });
     }
   };
 
+  // 停止摄像头
   const stopCamera = async () => {
     if (html5QrCodeRef.current) {
       try {
-        // 记录停止状态用于调试
-        console.log('Stopping camera for component:', componentIdRef.current);
-        
         if (html5QrCodeRef.current.isScanning) {
           await html5QrCodeRef.current.stop();
         }
         html5QrCodeRef.current.clear();
-        
-        // 从全局追踪器中移除
-        activeCameras.delete(componentIdRef.current);
-        console.log('Active cameras after stop:', [...activeCameras]);
-        
       } catch (err) {
-        console.error("Failed to stop scanner", err);
+        console.error("停止摄像头失败:", err);
       } finally {
         html5QrCodeRef.current = null;
       }
     }
   };
 
-  const startSimulationCountdown = () => {
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-    
-    countdownTimerRef.current = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(countdownTimerRef.current);
-          handleScanSuccess('模拟二维码数据-' + Date.now());
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
+  // 处理扫描成功
   const handleScanSuccess = useCallback((decodedText) => {
     if (scanComplete) return;
     
     setScanComplete(true);
     setIsScanning(false);
+    stopCamera();
 
-    // 震动反馈
     if (navigator.vibrate) {
       try {
         navigator.vibrate(200);
       } catch (e) {
-        // 忽略不支持的情况
+        console.log(e);
       }
     }
 
     Toast.show({
       icon: 'success',
-      content: '扫描成功',
+      content: '识别成功',
       duration: 1000,
     });
 
-    // 延迟跳转
+    // 解析二维码数据
     setTimeout(() => {
-      navigate('/scan-result', {
-        state: {
-          barcode: decodedText,
-          scanTime: new Date().toISOString(),
-          source: mode === 'camera' ? 'camera-scanner' : 'simulated-scanner'
+      try {
+        // 尝试解析JSON格式的溯源码
+        const qrData = JSON.parse(decodedText);
+        
+        if (qrData.type === 'trace' && qrData.productId) {
+          // 溯源码格式：跳转到对应商品的溯源详情
+          navigate('/scan-result', {
+            state: {
+              productId: qrData.productId,
+              barcode: decodedText,
+              scanTime: new Date().toISOString(),
+              source: 'qr-code',
+              forceRefresh: true
+            }
+          });
+        } else {
+          // 其他格式，默认跳转到随机商品
+          navigate('/scan-result', {
+            state: {
+              barcode: decodedText,
+              scanTime: new Date().toISOString(),
+              source: mode === 'camera' ? 'camera-scanner' : 'image-upload',
+              forceRefresh: true
+            }
+          });
         }
-      });
-    }, 1000);
+      } catch (e) {
+        // 非JSON格式，默认处理
+        navigate('/scan-result', {
+          state: {
+            barcode: decodedText,
+            scanTime: new Date().toISOString(),
+            source: mode === 'camera' ? 'camera-scanner' : 'image-upload',
+            forceRefresh: true
+          }
+        });
+      }
+    }, 1200);
   }, [scanComplete, navigate, mode]);
 
-  const toggleMode = () => {
-    setScanComplete(false);
-    setMode(prev => {
-      if (prev === 'camera') {
-        // 切换到模拟模式时停止摄像头
-        stopCamera();
-        return 'simulation';
-      } else {
-        return 'camera';
-      }
-    });
+  // 处理图片上传
+  const handleImageUpload = async (file) => {
+    try {
+      Toast.show({
+        icon: 'loading',
+        content: '识别中...',
+        duration: 0,
+      });
+
+      // 读取图片
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // 创建canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          
+          // 获取图像数据
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          
+          // 使用jsQR识别
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          
+          Toast.clear();
+          
+          if (code) {
+            handleScanSuccess(code.data);
+          } else {
+            Toast.show({
+              icon: 'fail',
+              content: '未识别到二维码，请重试',
+              duration: 2000,
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      
+      return { url: URL.createObjectURL(file) };
+    } catch (error) {
+      Toast.clear();
+      Toast.show({
+        icon: 'fail',
+        content: '图片识别失败',
+        duration: 2000,
+      });
+      return { url: '' };
+    }
   };
 
+  // 返回
   const handleBack = () => {
     stopCamera();
     navigate(-1);
   };
 
-  const handleManualTrigger = () => {
-    if (!scanComplete) {
-        handleScanSuccess('手动触发数据-' + Date.now());
-    }
-  };
-
-  // 添加页面可见性监听
+  // 页面可见性监听
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // 页面隐藏时停止摄像头
         stopCamera();
-      } else if (mode === 'camera' && !scanComplete) {
-        // 页面重新显示时重启摄像头
+      } else if (mode === 'camera' && !scanComplete && isMountedRef.current) {
         startCamera();
       }
     };
@@ -230,91 +255,76 @@ const QRCodeScanner = () => {
 
   return (
     <div className="scanner-container">
-      <NavBar className="scanner-nav-bar" mode="light" onBack={handleBack} backArrow={false}>
-        <span className="nav-title">扫码溯源</span>
+      {/* 顶部导航栏 */}
+      <NavBar className="scanner-nav-bar" onBack={handleBack}>
+        扫码溯源
       </NavBar>
 
+      {/* 摄像头预览区域 */}
       <div className="camera-preview">
-        {/* 摄像头容器 */}
-        <div 
-            id="reader" 
-            className={`real-camera ${mode === 'camera' ? 'active' : 'hidden'}`}
-        ></div>
+        {mode === 'camera' ? (
+          <>
+            <div id="reader" className="camera-reader"></div>
 
-        {/* 模拟器容器 */}
-        {mode === 'simulation' && (
-            <div className="simulated-camera">
-            <div className="camera-overlay">
-                <div className="camera-content">
-                <div className="scanning-indicator">
-                    <div className="scanning-dots">
-                    <span></span><span></span><span></span>
-                    </div>
-                    <div className="scanning-text">
-                    {isScanning ? '模拟扫描中...' : '准备扫描'}
-                    </div>
-                </div>
-
-                {isScanning && countdown > 0 && (
-                    <div className="countdown-display">
-                    {/* <div className="countdown-number">{countdown}</div> */}
-                    </div>
-                )}
-                </div>
-            </div>
-            </div>
-        )}
-
-        {/* 扫描成功状态覆盖 */}
-        {scanComplete && (
-            <div className="scan-success-overlay">
+            {/* 扫描成功遮罩 */}
+            {scanComplete && (
+              <div className="scan-success-overlay">
                 <div className="success-content">
-                    <div className="success-icon">✅</div>
-                    <div className="success-text">扫描成功！</div>
-                    <div className="processing-text">正在解析数据...</div>
+                  <div className="success-icon">✓</div>
+                  <div className="success-text">识别成功</div>
+                  <div className="processing-text">正在跳转...</div>
                 </div>
-            </div>
-        )}
+              </div>
+            )}
 
-        {/* 扫描框覆盖层 (始终显示) */}
-        {!scanComplete && (
-            <div className="scan-overlay">
-            <div className="scan-frame">
-                <div className="scan-frame-corner scan-frame-corner-top-left"></div>
-                <div className="scan-frame-corner scan-frame-corner-top-right"></div>
-                <div className="scan-frame-corner scan-frame-corner-bottom-left"></div>
-                <div className="scan-frame-corner scan-frame-corner-bottom-right"></div>
-                <div className={`scan-line ${isScanning ? 'scanning' : ''}`}></div>
-            </div>
-            <div className="scan-hint">
-                {mode === 'camera' 
-                ? '将二维码/条形码放入框内，即可自动扫描' 
-                : (countdown > 0 ? `模拟倒计时: ${countdown}秒` : '处理中...')}
-            </div>
-            </div>
+            {/* 扫描框 */}
+            {!scanComplete && (
+              <div className="scan-overlay">
+                <div className="scan-frame">
+                  <div className="corner corner-tl"></div>
+                  <div className="corner corner-tr"></div>
+                  <div className="corner corner-bl"></div>
+                  <div className="corner corner-br"></div>
+                  <div className={`scan-line ${isScanning ? 'active' : ''}`}></div>
+                </div>
+                <div className="scan-hint">
+                  将二维码放入框内自动扫描
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="upload-area">
+            <div className="upload-icon"><i className="bi bi-images"></i></div>
+            <div className="upload-title">选择二维码图片</div>
+            <div className="upload-subtitle">支持 JPG、PNG 格式</div>
+            <ImageUploader
+              value={[]}
+              onChange={() => {}}
+              upload={handleImageUpload}
+              maxCount={1}
+            >
+              <Button className="upload-btn">选择图片</Button>
+            </ImageUploader>
+          </div>
         )}
       </div>
 
-      <div className="scanner-controls">
+      {/* 底部切换栏 */}
+      <div className="scanner-tabs">
         <div 
-            className={`control-item ${mode === 'camera' ? 'active' : ''}`} 
-            onClick={() => mode !== 'camera' && toggleMode()}
+          className={`tab-item ${mode === 'camera' ? 'active' : ''}`}
+          onClick={() => !scanComplete && setMode('camera')}
         >
-          <div className="control-icon camera-icon">📷</div>
-          <span className="control-text">摄像头</span>
+          <div className="tab-icon"><i className="bi bi-qr-code-scan"></i></div>
+          <div className="tab-text">扫一扫</div>
         </div>
-
-        <div className="control-item" onClick={handleManualTrigger}>
-          <div className="control-icon manual-icon">⚡</div>
-          <span className="control-text">立即触发</span>
-        </div>
-
         <div 
-            className={`control-item ${mode === 'simulation' ? 'active' : ''}`}
-            onClick={() => mode !== 'simulation' && toggleMode()}
+          className={`tab-item ${mode === 'upload' ? 'active' : ''}`}
+          onClick={() => !scanComplete && setMode('upload')}
         >
-          <div className="control-icon simulation-icon">🔢</div>
-          <span className="control-text">模拟扫码</span>
+          <div className="tab-icon"><i className="bi bi-image"></i></div>
+          <div className="tab-text">相册</div>
         </div>
       </div>
     </div>

@@ -22,8 +22,8 @@ function App() {
     }
   }, [location, navigate]);
 
-  // 根据路径决定是否显示底部导航
-  const showFooter = !['/login', '/qrcode-scanner', '/product-detail', '/scan-result'].includes(location.pathname);
+  // 只在特定页面显示底部导航：首页、商城、订单历史、用户中心
+  const showFooter = ['/', '/mall', '/orderHistory', '/user'].includes(location.pathname);
 
   return (
     <div className="app-container">

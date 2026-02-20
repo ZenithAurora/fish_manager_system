@@ -1,416 +1,491 @@
-/* 扫码结果页样式 */
-
+/* 扫码结果页 - 殿堂级重构样式 */
 .scanner-result-page {
   min-height: 100vh;
-  background: #f5f7fa;
-  padding-bottom: 100px;
-}
-
-/* 导航栏 */
-.result-nav {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-
-  .adm-nav-bar-title {
-    color: #fff;
-  }
-
-  .adm-nav-bar-back-arrow {
-    color: #fff;
-  }
-}
-
-/* 加载状态 */
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
-
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: #6b7280;
-    font-size: 14px;
-  }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* 产品信息卡片 */
-.product-card {
-  background: #fff;
-  margin: 12px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-
-  .product-header {
-    display: flex;
-    padding: 16px;
-    background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
-
-    .product-image {
-      width: 100px;
-      height: 100px;
-      border-radius: 12px;
-      object-fit: cover;
-      margin-right: 14px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .product-info {
-      flex: 1;
-
-      .product-name {
-        margin: 0 0 6px;
-        font-size: 17px;
-        font-weight: 600;
-        color: #1f2937;
-        line-height: 1.3;
-      }
-
-      .product-subtitle {
-        margin: 0 0 10px;
-        font-size: 13px;
-        color: #6b7280;
-      }
-
-      .product-status {
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          font-size: 12px;
-          padding: 4px 10px;
-          border-radius: 12px;
-
-          &.success {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-          }
-        }
-      }
-    }
-  }
-
-  .product-details {
-    padding: 0 16px 16px;
-
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #f3f4f6;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .label {
-        font-size: 13px;
-        color: #6b7280;
-      }
-
-      .value {
-        font-size: 13px;
-        color: #374151;
-        font-weight: 500;
-
-        &.clickable {
-          color: #667eea;
-          cursor: pointer;
-
-          .copy-icon {
-            font-size: 12px;
-            margin-left: 4px;
-          }
-        }
-      }
-    }
-  }
-
-  .qrcode-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px;
-    background: #f9fafb;
-    border-top: 1px dashed #e5e7eb;
-
-    .qrcode-image {
-      width: 120px;
-      height: 120px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-    }
-
-    .qrcode-text {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-  }
-}
-
-/* 溯源链条区域 */
-.trace-section {
-  margin: 12px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-
-    .section-icon {
-      font-size: 20px;
-      margin-right: 8px;
-    }
-
-    .section-title {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: #1f2937;
-    }
-
-    .node-count {
-      margin-left: auto;
-      font-size: 12px;
-      color: #667eea;
-      background: rgba(102, 126, 234, 0.1);
-      padding: 4px 10px;
-      border-radius: 10px;
-    }
-  }
-}
-
-/* 溯源时间线 */
-.trace-timeline {
+  background: #f1f5f9;
   position: relative;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-.trace-node {
-  display: flex;
-  margin-bottom: 0;
-  cursor: pointer;
-
-  &:last-child {
-    .timeline-connector {
-      display: none;
-    }
+/* 沉浸式导航栏 */
+.result-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+  .adm-nav-bar-title {
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
   }
 
-  &.expanded {
-    .node-content {
-      background: rgba(102, 126, 234, 0.03);
-      border-color: rgba(102, 126, 234, 0.2);
+  .qr-btn {
+    padding: 0;
+    
+    .qr-icon {
+      font-size: 24px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
     }
   }
+}
 
-  .timeline-line {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 14px;
-
-    .timeline-dot {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .timeline-connector {
-      width: 2px;
-      flex: 1;
-      min-height: 20px;
-      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-      margin: 4px 0;
-    }
-  }
-
-  .node-content {
-    flex: 1;
-    background: #f9fafb;
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 12px;
-    border: 1px solid #f0f0f0;
-    transition: all 0.3s;
-
-    .node-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-
-      .node-name {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 600;
-        color: #1f2937;
-        flex: 1;
-        margin-right: 10px;
-      }
-
-      .node-status {
-        font-size: 11px;
-        padding: 3px 8px;
-        border-radius: 8px;
-        flex-shrink: 0;
-
-        &.success {
-          background: rgba(16, 185, 129, 0.1);
-          color: #10b981;
-        }
-      }
-    }
-
-    .node-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      .meta-item {
-        font-size: 12px;
-        color: #6b7280;
-      }
-    }
-
-    .node-details {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px dashed #e5e7eb;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      animation: fadeIn 0.3s ease;
-
-      .detail-item {
-        background: #fff;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #f0f0f0;
-
-        .detail-key {
-          display: block;
-          font-size: 11px;
-          color: #9ca3af;
-          margin-bottom: 4px;
-        }
-
-        .detail-value {
-          font-size: 13px;
-          color: #374151;
-          font-weight: 500;
-        }
-      }
-    }
-  }
+.content-container {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeIn 0.8s ease-out;
+  padding-bottom: 100px; /* 为底部悬浮按钮留出空间 */
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. 全息产品档案卡 */
+.holographic-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  
+  .card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px) brightness(0.9);
+    z-index: 0;
+    mask-image: linear-gradient(to bottom, black, transparent);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* 左右分栏布局 */
+  .card-content-row {
+    position: relative;
+    z-index: 1;
+    padding: 24px 20px;
+    display: flex;
+    gap: 20px;
+  }
+
+  /* 左侧：视觉中心 (40%) */
+  .visual-column {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+
+    .product-image-box {
+      width: 100px;
+      height: 100px;
+      border-radius: 16px;
+      border: 3px solid #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+      background: #f1f5f9;
+      
+      .main-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .scan-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, transparent 50%, rgba(16, 185, 129, 0.1) 100%);
+        animation: scan-line 3s infinite linear;
+      }
+    }
+
+    .trace-status-bar {
+      width: 100%;
+      padding: 6px 4px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-bottom: 8px;
+      
+      &.status-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #059669;
+      }
+      
+      .status-icon {
+        font-size: 16px;
+      }
+      
+      .status-text {
+        font-size: 10px;
+        font-weight: 600;
+      }
+    }
+
+    /* 查看专属溯源码按钮 */
+    .view-qr-btn {
+      width: 100%;
+      padding: 6px 4px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:active {
+        background: #f1f5f9;
+        transform: scale(0.98);
+      }
+
+      i {
+        font-size: 16px;
+        color: #3b82f6;
+      }
+
+      span {
+        font-size: 9px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* 右侧：数据中心 (60%) */
+  .info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .product-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 2px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-id {
+      font-size: 10px;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 12px;
+    }
+
+    /* 实时动态数据面板 */
+    .live-metrics-panel {
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      border-radius: 12px;
+      padding: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 4px;
+        
+        .label {
+          font-size: 10px;
+          color: #64748b;
+        }
+        
+        .value {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 16px;
+          font-weight: 700;
+          
+          &.highlight { color: #10b981; }
+        }
+      }
+
+      .metric-bar {
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        
+        .bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #10b981, #34d399);
+          border-radius: 2px;
+          transition: width 0.5s ease-out;
+        }
+      }
+
+      .mini-metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+        
+        .mini-metric {
+          display: flex;
+          flex-direction: column;
+          
+          .label { font-size: 8px; color: #94a3b8; margin-bottom: 1px; }
+          .value { font-size: 11px; color: #334155; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+        }
+      }
+      
+      .block-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 6px;
+        border-top: 1px dashed #cbd5e1;
+        
+        .label { font-size: 8px; color: #94a3b8; }
+        .value { 
+          font-size: 9px; 
+          color: #64748b; 
+          font-family: 'JetBrains Mono', monospace; 
+          
+          &.animate-pulse { animation: textPulse 2s infinite; }
+        }
+      }
+    }
+  }
+
+  /* 底部装饰 */
+  .card-footer-decoration {
+    border-top: 1px solid #f1f5f9;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fcfcfc;
+    
+    .tech-lines {
+      display: flex;
+      gap: 3px;
+      
+      span {
+        width: 12px;
+        height: 2px;
+        background: #e2e8f0;
+        border-radius: 1px;
+        
+        &:first-child { background: #10b981; width: 20px; }
+      }
+    }
+    
+    .system-ver {
+      font-size: 9px;
+      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+    }
   }
 }
 
-/* 底部操作 */
-.bottom-actions {
+@keyframes scan-line {
+  0% { top: 0; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes textPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* 2. 区块链验证模块 */
+.verify-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+  
+  .verify-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    
+    .icon { margin-right: 8px; font-size: 18px; }
+    .title { font-weight: 600; font-size: 14px; color: #1e293b; }
+  }
+  
+  .verify-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0fdf4;
+    padding: 12px;
+    border-radius: 12px;
+    
+    .hash-box {
+      display: flex;
+      flex-direction: column;
+      
+      .label { font-size: 10px; color: #15803d; opacity: 0.7; }
+      .code { 
+        font-family: 'JetBrains Mono', monospace; 
+        font-size: 12px; 
+        color: #15803d; 
+        font-weight: 600;
+      }
+    }
+    
+    .verify-btn {
+      height: 32px;
+      border-radius: 16px;
+      font-size: 12px;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      padding: 0 16px;
+      
+      &.verified {
+        background: #fff;
+        color: #10b981;
+        border: 1px solid #10b981;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+/* 3. 沉浸式溯源时间流 */
+.timeline-section {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 4px;
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+    }
+    
+    .node-count {
+      font-size: 12px;
+      color: #64748b;
+      background: #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+  }
+  
+  .timeline-flow {
+    position: relative;
+    padding-left: 8px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 17px;
+      width: 2px;
+      background: linear-gradient(to bottom, #cbd5e1 50%, transparent 100%);
+      z-index: 0;
+      opacity: 0.3;
+    }
+  }
+}
+
+/* 4. 底部悬浮操作栏 */
+.floating-actions {
   position: fixed;
-  bottom: 0;
+  bottom: 24px;
   left: 0;
   right: 0;
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-  background: #fff;
-  border-top: 1px solid #f0f0f0;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
-
-  .ai-btn {
-    flex: 1;
-    height: 46px;
-    border-radius: 23px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-  }
-
-  .rescan-btn {
-    flex: 1;
-    height: 46px;
-    border-radius: 23px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-  }
-}
-
-/* 响应式 */
-@media (max-width: 375px) {
-  .product-card .product-header {
-    .product-image {
-      width: 80px;
-      height: 80px;
+  padding: 0 20px;
+  z-index: 99;
+  
+  .action-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 8px;
+    border-radius: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    max-width: 500px;
+    margin: 0 auto;
+    
+    .action-btn {
+      border: none;
+      height: 52px;
+      border-radius: 26px;
+      font-weight: 600;
+      padding: 0;
+      transition: all 0.2s ease;
+      
+      &.ai {
+        flex: 1;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+        
+        .icon { font-size: 20px; }
+        
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+      
+      &.scan {
+        width: 52px;
+        min-width: 52px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:active { 
+          background: #e2e8f0;
+          transform: scale(0.95);
+        }
+      }
     }
-
-    .product-info .product-name {
-      font-size: 15px;
-    }
-  }
-
-  .trace-node .node-content .node-details {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 动画 */
-.product-card,
-.trace-section {
-  animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

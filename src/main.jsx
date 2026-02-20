@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { unstableSetRender } from 'antd-mobile'
+// import 'bootstrap-icons/font/bootstrap-icons.css'
 import './styles/global.scss'
 import router from './router'
 
@@ -20,4 +21,4 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
-)
+)
