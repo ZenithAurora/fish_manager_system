@@ -96,7 +96,9 @@ export const setPayPassword = (password) => {
  */
 export const checkPayPassword = (password) => {
   const user = getCurrentUser();
-  return user.payPassword === password;
+  // 如果用户没有设置支付密码，默认使用 123456
+  const payPwd = user.payPassword || '123456';
+  return payPwd === password;
 };
 
 /**

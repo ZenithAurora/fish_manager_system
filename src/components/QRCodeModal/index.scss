@@ -1,0 +1,190 @@
+/* 模态框容器 */
+.qrcode-modal-container {
+  padding: 24px;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+  /* 顶部拖动条 */
+  .modal-handle-bar {
+    width: 40px;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  /* 头部区域 */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .header-left {
+      .title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 4px;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6b7280;
+      }
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f3f4f6;
+      cursor: pointer;
+      transition: all 0.2s;
+      
+      &:hover {
+        background: #e5e7eb;
+      }
+      
+      i {
+        font-size: 18px;
+        color: #4b5563;
+      }
+    }
+  }
+
+  /* 二维码卡片 */
+  .qr-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    border: 1px solid #f3f4f6;
+
+    .product-info {
+      text-align: center;
+      margin-bottom: 20px;
+
+      .name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 4px;
+      }
+
+      .id-code {
+        font-size: 12px;
+        color: #9ca3af;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+
+    .qrcode-wrapper {
+      position: relative;
+      padding: 16px;
+      background: #fff;
+      border-radius: 16px;
+      /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
+      margin-bottom: 20px;
+      
+      .corner {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #10b981;
+        
+        &.corner-tl { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+        &.corner-tr { top: -2px; right: -2px; border-left: none; border-bottom: none; border-radius: 0 4px 0 0; }
+        &.corner-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; border-radius: 0 0 0 4px; }
+        &.corner-br { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 4px 0; }
+      }
+      
+      .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #10b981, transparent);
+        opacity: 0.5;
+        animation: scanLine 2s infinite linear;
+        pointer-events: none;
+      }
+    }
+
+    .refresh-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 6px 12px;
+      border-radius: 12px;
+      
+      i { font-size: 14px; }
+    }
+  }
+
+  /* 底部 */
+  .modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .security-features {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 8px;
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #6b7280;
+
+        i {
+          font-size: 14px;
+          color: #10b981;
+        }
+      }
+    }
+
+    .save-btn {
+      height: 48px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+      &:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+      }
+      
+      i { font-size: 18px; }
+    }
+  }
+}
+
+@keyframes scanLine {
+  0% { top: 10%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}

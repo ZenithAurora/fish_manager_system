@@ -10,11 +10,13 @@ import {
   BellOutline,
   QuestionCircleOutline,
   UserContactOutline,
-  MessageOutline
+  MessageOutline,
+  EnvironmentOutline
 } from 'antd-mobile-icons';
 import { getCurrentUser, getTraceHistory } from '../../mock/userData';
 import { mockLogout, isLoggedIn } from '../../mock/authService';
 import { getOrders } from '../../mock/orderData';
+import { getFavoritesCount } from '../../mock/favoritesData';
 // FooterNav 由 App.jsx 控制显示，这里不需要单独引入
 import FeedbackModal from '../../components/FeedbackModal';
 import './index.scss';
@@ -52,7 +54,7 @@ const UserCenter = () => {
       totalOrders: orders.length,
       totalSpent: totalSpent.toFixed(2),
       traceCount: traceHistory.length,
-      favoriteCount: userData.stats?.favoriteCount || 0
+      favoriteCount: getFavoritesCount()
     });
   }, [navigate]);
 
@@ -79,10 +81,13 @@ const UserCenter = () => {
         navigate('/order-history');
         break;
       case 'trace':
-        Toast.show({ content: '溯源记录功能开发中', icon: 'fail' });
+        navigate('/trace-history');
         break;
       case 'favorites':
-        Toast.show({ content: '收藏功能开发中', icon: 'fail' });
+        navigate('/favorites');
+        break;
+      case 'address':
+        navigate('/address-list');
         break;
       case 'settings':
         Toast.show({ content: '设置功能开发中', icon: 'fail' });
@@ -94,7 +99,7 @@ const UserCenter = () => {
         Toast.show({ content: '帮助中心功能开发中', icon: 'fail' });
         break;
       case 'about':
-        Toast.show({ content: '鳗知溯系统 v1.0.0', icon: 'success' });
+        navigate('/about');
         break;
       case 'feedback':
         setShowFeedbackModal(true);
@@ -180,6 +185,13 @@ const UserCenter = () => {
 
       {/* 其他功能列表 */}
       <div className="list-section">
+        <div className="list-item" onClick={() => handleMenuClick('address')}>
+          <div className="list-icon">
+            <EnvironmentOutline />
+          </div>
+          <span className="list-text">收货地址</span>
+          <RightOutline className="list-arrow" />
+        </div>
         <div className="list-item" onClick={() => handleMenuClick('notifications')}>
           <div className="list-icon">
             <BellOutline />

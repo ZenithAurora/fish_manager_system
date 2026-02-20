@@ -1,0 +1,43 @@
+// 省市区三级联动数据
+// 这里提供部分示例数据，实际项目中应使用完整的省市区数据
+export const regionData = [
+  [
+    { label: '浙江省', value: '浙江省' },
+    { label: '江苏省', value: '江苏省' },
+    { label: '广东省', value: '广东省' },
+    { label: '上海市', value: '上海市' },
+    { label: '北京市', value: '北京市' },
+  ],
+  [
+    { label: '杭州市', value: '杭州市' },
+    { label: '宁波市', value: '宁波市' },
+    { label: '温州市', value: '温州市' },
+    { label: '南京市', value: '南京市' },
+    { label: '苏州市', value: '苏州市' },
+    { label: '广州市', value: '广州市' },
+    { label: '深圳市', value: '深圳市' },
+    { label: '黄浦区', value: '黄浦区' },
+    { label: '徐汇区', value: '徐汇区' },
+    { label: '朝阳区', value: '朝阳区' },
+    { label: '海淀区', value: '海淀区' },
+  ],
+  [
+    { label: '西湖区', value: '西湖区' },
+    { label: '滨江区', value: '滨江区' },
+    { label: '余杭区', value: '余杭区' },
+    { label: '萧山区', value: '萧山区' },
+    { label: '江干区', value: '江干区' },
+    { label: '海曙区', value: '海曙区' },
+    { label: '鄞州区', value: '鄞州区' },
+    { label: '鹿城区', value: '鹿城区' },
+    { label: '瓯海区', value: '瓯海区' },
+    { label: '玄武区', value: '玄武区' },
+    { label: '秦淮区', value: '秦淮区' },
+    { label: '姑苏区', value: '姑苏区' },
+    { label: '工业园区', value: '工业园区' },
+    { label: '天河区', value: '天河区' },
+    { label: '越秀区', value: '越秀区' },
+    { label: '南山区', value: '南山区' },
+    { label: '福田区', value: '福田区' },
+  ],
+];

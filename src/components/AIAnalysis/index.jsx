@@ -316,6 +316,7 @@ ${origin}地处长江上游，水质优良，是国内优质鳗鱼养殖基地�
       visible={visible}
       onMaskClick={onClose}
       bodyStyle={{
+        backgroundColor: 'transparent',
         height: '85vh',
         borderTopLeftRadius: '16px',
         borderTopRightRadius: '16px',

@@ -1,0 +1,253 @@
+.address-list-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+
+  .nav-bar {
+    background: transparent;
+    color: white;
+    
+    :global {
+      .adm-nav-bar-back-arrow {
+        color: white;
+      }
+      .adm-nav-bar-title {
+        color: white;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .content-area {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    padding-bottom: 80px;
+  }
+
+  // 空状态
+  .empty-state {
+    background: white;
+    border-radius: 16px;
+    padding: 60px 20px;
+    text-align: center;
+    margin-top: 40px;
+
+    .empty-icon {
+      font-size: 80px;
+      color: #d1d5db;
+      margin-bottom: 20px;
+    }
+
+    .empty-text {
+      font-size: 18px;
+      color: #374151;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .empty-tip {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 24px;
+    }
+
+    .add-btn-empty {
+      width: 200px;
+      height: 44px;
+      border-radius: 22px;
+      font-size: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+  }
+
+  // 地址列表
+  .address-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    :global {
+      .adm-swipe-action {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+    }
+
+    .address-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s;
+
+      &.selectable {
+        cursor: pointer;
+        
+        &:active {
+          transform: scale(0.98);
+          opacity: 0.9;
+        }
+      }
+
+      .address-content {
+        margin-bottom: 12px;
+
+        .address-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 8px;
+
+          .name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+          }
+
+          .phone {
+            font-size: 14px;
+            color: #6b7280;
+          }
+
+          .tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+
+            &.tag-家 {
+              background: #dbeafe;
+              color: #1e40af;
+            }
+
+            &.tag-公司 {
+              background: #fef3c7;
+              color: #92400e;
+            }
+
+            &.tag-学校 {
+              background: #dcfce7;
+              color: #166534;
+            }
+          }
+        }
+
+        .address-detail {
+          display: flex;
+          align-items: flex-start;
+          gap: 6px;
+          font-size: 14px;
+          color: #6b7280;
+          line-height: 1.6;
+
+          .location-icon {
+            font-size: 16px;
+            color: #667eea;
+            margin-top: 2px;
+            flex-shrink: 0;
+          }
+        }
+      }
+
+      .address-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid #f3f4f6;
+
+        .default-checkbox {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          user-select: none;
+
+          .checkbox-icon {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            transition: all 0.3s;
+          }
+
+          .checkbox-label {
+            font-size: 14px;
+            color: #6b7280;
+            transition: color 0.3s;
+          }
+
+          &.checked {
+            .checkbox-icon {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              border-color: #667eea;
+            }
+
+            .checkbox-label {
+              color: #667eea;
+              font-weight: 500;
+            }
+          }
+
+          &:not(.checked):active {
+            .checkbox-icon {
+              transform: scale(0.9);
+            }
+          }
+        }
+
+        .edit-btn {
+          color: #667eea;
+          font-size: 14px;
+          padding: 4px 12px;
+          
+          &:active {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
+
+  // 底部按钮
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+
+    .add-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      :global {
+        .antd-mobile-icon {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

@@ -28,6 +28,34 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+      }
+
+      &.empty {
+        border: 1px dashed #d1d5db;
+        background: #fafafa;
+        
+        .left-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          .empty-icon {
+            font-size: 20px;
+            color: #9ca3af;
+          }
+          
+          .empty-text {
+            font-size: 15px;
+            color: #6b7280;
+          }
+        }
+      }
 
       .left-info {
         flex: 1;
@@ -185,7 +213,7 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    z-index: 100;
+    z-index: 1001;
     padding-bottom: max(12px, env(safe-area-inset-bottom));
 
     .total-wrapper {
@@ -207,12 +235,24 @@
     .submit-btn {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border: none;
-      padding: 0 32px;
-      height: 40px;
-      line-height: 40px;
-      border-radius: 20px;
+      padding: 0 40px;
+      height: 44px;
+      line-height: 44px;
+      border-radius: 22px;
       font-size: 16px;
       font-weight: bold;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+      
+      &:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      }
+      
+      &:disabled {
+        background: #ccc;
+        box-shadow: none;
+      }
     }
   }
 }
@@ -228,7 +268,7 @@
 .pay-content {
   background: #fff;
   padding: 24px;
-  width: 300px;
+  width: 100%;
   text-align: center;
   border-radius: 16px;
 
@@ -256,11 +296,21 @@
   }
 
   .pwd-input-area {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
   .adm-passcode-input-cell {
     border: 1px solid #e5e5e5;
     background: #f9f9f9;
+  }
+  
+  .tip-text {
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 8px;
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 8px;
   }
 }

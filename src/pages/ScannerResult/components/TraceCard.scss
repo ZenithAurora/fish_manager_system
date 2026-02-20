@@ -1,0 +1,213 @@
+/* 溯源卡片组件样式 - 宽屏现代化版 */
+.trace-card {
+  position: relative;
+  display: flex;
+  margin-bottom: 24px;
+  padding-left: 28px; /* 减少左侧缩进，增加内容宽度 */
+  
+  &:last-child {
+    margin-bottom: 100px; /* 增加底部间距，防止被悬浮按钮遮挡 */
+    .timeline-indicator .line {
+      display: none;
+    }
+  }
+
+  /* 时间轴指示器 */
+  .timeline-indicator {
+    position: absolute;
+    left: 6px;
+    top: 20px;
+    bottom: 0;
+    width: 2px;
+    
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #10b981;
+      position: absolute;
+      left: -6px;
+      top: 0;
+      z-index: 2;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9); /* 更厚的描边，增加立体感 */
+    }
+    
+    .line {
+      position: absolute;
+      top: 14px;
+      bottom: -24px;
+      left: 0;
+      width: 2px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+  }
+
+  &.highlight {
+    .dot {
+      width: 16px;
+      height: 16px;
+      left: -7px;
+      animation: pulse-dot 2s infinite;
+    }
+    
+    .line {
+      background: linear-gradient(to bottom, #10b981, #e2e8f0);
+    }
+  }
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* 卡片主体 - 增加宽度和质感 */
+.card-content {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px; /* 更大的圆角 */
+  padding: 20px; /* 增加内边距 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* 更柔和的投影 */
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  width: 100%; /* 确保占满剩余空间 */
+  
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+/* 头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    
+    .icon { margin-right: 4px; }
+  }
+  
+  .time {
+    font-size: 11px;
+    color: #94a3b8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* 主体内容 */
+.card-body {
+  margin-bottom: 12px;
+  
+  .node-name {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  .node-address {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+  }
+}
+
+/* 数据面板 */
+.data-panel {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: #f8fafc;
+  border-radius: 8px;
+  
+  .data-item {
+    display: flex;
+    flex-direction: column;
+    
+    .data-label {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    
+    .data-value {
+      font-size: 12px;
+      font-weight: 500;
+      color: #334155;
+    }
+  }
+}
+
+/* 波形图区域 */
+.chart-area {
+  margin-bottom: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+  
+  .chart-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #64748b;
+    margin-bottom: 4px;
+    
+    .status-ok {
+      color: #10b981;
+    }
+  }
+  
+  .wave-chart {
+    height: 40px;
+    overflow: visible;
+  }
+  
+  .wave-path {
+    animation: wave-move 3s linear infinite;
+  }
+  
+  .wave-path-2 {
+    animation: wave-move 4s linear infinite reverse;
+  }
+}
+
+@keyframes wave-move {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+/* 底部哈希 */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  
+  .hash-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #cbd5e1;
+    
+    .hash-label { margin-right: 4px; }
+  }
+  
+  .verified-badge {
+    font-size: 9px;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+}

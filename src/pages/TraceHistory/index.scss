@@ -1,0 +1,341 @@
+.trace-history-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 80px;
+
+  // 导航栏
+  .history-nav {
+    background: transparent;
+    color: white;
+    
+    :global {
+      .adm-nav-bar-title {
+        color: white;
+        font-weight: 600;
+        font-size: 18px;
+      }
+
+      .adm-nav-bar-back-arrow {
+        color: white;
+        font-size: 20px;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.3s;
+
+      &:active {
+        opacity: 0.7;
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  // 空状态容器
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: calc(100vh - 200px);
+
+    :global {
+      .adm-empty {
+        padding: 0;
+      }
+
+      .adm-empty-image-container {
+        margin-bottom: 20px;
+      }
+    }
+
+    .empty-text {
+      text-align: center;
+      color: white;
+      
+      p {
+        margin: 8px 0;
+        
+        &:first-child {
+          font-size: 16px;
+          font-weight: 500;
+        }
+        
+        &.empty-tip {
+          font-size: 14px;
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .scan-button {
+      margin-top: 30px;
+      width: 200px;
+      height: 44px;
+      border-radius: 22px;
+      font-size: 16px;
+      font-weight: 500;
+      background: white;
+      color: #667eea;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      :global {
+        .antd-mobile-icon {
+          margin-right: 8px;
+        }
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  // 内容区域
+  .history-content {
+    padding: 16px;
+
+    .record-count {
+      color: white;
+      font-size: 14px;
+      margin-bottom: 16px;
+      padding: 0 4px;
+      opacity: 0.9;
+
+      .count-num {
+        font-weight: 600;
+        font-size: 18px;
+        margin: 0 2px;
+      }
+    }
+
+    // 历史记录列表
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .history-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        border-radius: 12px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+        &:active {
+          transform: scale(0.98);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        // 图片区域
+        .item-image {
+          flex-shrink: 0;
+          width: 80px;
+          height: 80px;
+          border-radius: 8px;
+          overflow: hidden;
+          background: #f5f5f5;
+
+          :global {
+            .adm-image {
+              width: 100%;
+              height: 100%;
+            }
+
+            .adm-image-img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+
+        // 内容区域
+        .item-content {
+          flex: 1;
+          min-width: 0;
+
+          .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+
+            .item-title {
+              font-size: 16px;
+              font-weight: 600;
+              color: #333;
+              margin: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .item-time {
+              flex-shrink: 0;
+              font-size: 12px;
+              color: #999;
+              margin-left: 8px;
+            }
+          }
+
+          .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .info-row {
+              display: flex;
+              align-items: center;
+              font-size: 13px;
+
+              .info-label {
+                color: #666;
+                flex-shrink: 0;
+              }
+
+              .info-value {
+                color: #333;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+
+        // 箭头
+        .item-arrow {
+          flex-shrink: 0;
+          color: #ccc;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  // 底部操作按钮
+  .bottom-action {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(to top, rgba(102, 126, 234, 0.95), transparent);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+
+    .scan-button {
+      width: 100%;
+      height: 48px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 500;
+      background: white;
+      color: #667eea;
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+      :global {
+        .antd-mobile-icon {
+          margin-right: 8px;
+          font-size: 20px;
+        }
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (min-width: 768px) {
+  .trace-history-page {
+    .history-content {
+      max-width: 600px;
+      margin: 0 auto;
+
+      .history-list {
+        .history-item {
+          .item-image {
+            width: 100px;
+            height: 100px;
+          }
+
+          .item-content {
+            .item-header {
+              .item-title {
+                font-size: 18px;
+              }
+
+              .item-time {
+                font-size: 13px;
+              }
+            }
+
+            .item-info {
+              .info-row {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .bottom-action {
+      max-width: 600px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+// 加载状态
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  min-height: calc(100vh - 100px);
+  color: white;
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
