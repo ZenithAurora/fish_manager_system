@@ -200,7 +200,7 @@ export const mockUser = {
   ...defaultUser,
   id: 'USER001',
   phone: '138****8888',
-  nickname: '鳗鱼爱好者',
+  nickname: '不知名的鳗鱼爱喝可乐',
   avatar: avatarImg,
   payPassword: '123456',
   isLoggedIn: true,

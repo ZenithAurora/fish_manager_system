@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Popup, Button, Toast } from 'antd-mobile';
 import { QRCodeSVG } from 'qrcode.react';
+import fishLogo from '../../assets/img/fish.png'; // 导入图片资源
 import './index.scss';
 
 const QRCodeModal = ({ visible, onClose, product }) => {
@@ -45,7 +46,10 @@ const QRCodeModal = ({ visible, onClose, product }) => {
   // 下载二维码
   const handleDownload = async () => {
     const svg = document.querySelector('.qrcode-wrapper svg');
-    if (!svg) return;
+    if (!svg) {
+      Toast.show({ content: '未找到二维码', icon: 'fail' });
+      return;
+    }
 
     Toast.show({
       icon: 'loading',
@@ -54,69 +58,113 @@ const QRCodeModal = ({ visible, onClose, product }) => {
     });
 
     try {
-      // 1. 将 Logo 转为 Base64，解决 Canvas 绘制 SVG 外部图片丢失问题
-      const logoUrl = "/fish.png";
-      let logoBase64 = "";
-      try {
-        const response = await fetch(logoUrl);
-        const blob = await response.blob();
-        logoBase64 = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
-        });
-      } catch (e) {
-        console.error("Logo load failed", e);
-      }
-
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const img = new Image();
+      const qrSize = 260;
+      const logoSize = 50;
       
-      // 2. 克隆 SVG 并替换 image href 为 Base64
-      const clonedSvg = svg.cloneNode(true);
-      if (logoBase64) {
-        const imageEl = clonedSvg.querySelector('image');
-        if (imageEl) {
-          // 兼容不同浏览器的 SVG 图片引用属性
-          imageEl.setAttribute('href', logoBase64);
-          imageEl.setAttribute('xlink:href', logoBase64);
-        }
-      }
-
-      const svgData = new XMLSerializer().serializeToString(clonedSvg);
+      // 设置 Canvas 尺寸
+      canvas.width = qrSize;
+      canvas.height = qrSize;
+      
+      // 填充白色背景
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // 克隆 SVG 并移除 image 元素（因为会有跨域问题）
+      const svgClone = svg.cloneNode(true);
+      const imageElements = svgClone.querySelectorAll('image');
+      imageElements.forEach(img => img.remove());
+      
+      const svgData = new XMLSerializer().serializeToString(svgClone);
       const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
+      const svgUrl = URL.createObjectURL(svgBlob);
+      
+      // 加载二维码 SVG
+      const qrImage = new Image();
+      
+      const loadTimeout = setTimeout(() => {
+        Toast.clear();
+        Toast.show({ content: '图片加载超时', icon: 'fail' });
+        URL.revokeObjectURL(svgUrl);
+      }, 5000);
 
-      img.onload = () => {
-        // 增加一点白色边距，让二维码不贴边
-        const margin = 20;
-        canvas.width = 260; // 固定宽度，保证清晰度
-        canvas.height = 260;
+      qrImage.onload = () => {
+        clearTimeout(loadTimeout);
         
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // 居中绘制
-        const x = (canvas.width - img.width) / 2;
-        const y = (canvas.height - img.height) / 2;
-        ctx.drawImage(img, x, y);
+        // 绘制二维码
+        ctx.drawImage(qrImage, 0, 0, qrSize, qrSize);
         
-        canvas.toBlob((blob) => {
-          const link = document.createElement('a');
-          link.download = `trace-qr-${product?.id || 'code'}.png`;
-          link.href = URL.createObjectURL(blob);
-          link.click();
-          URL.revokeObjectURL(url);
-          Toast.clear();
-          Toast.show({ content: '二维码已保存', icon: 'success' });
-        });
+        // 加载并绘制 Logo
+        const logo = new Image();
+        logo.crossOrigin = 'anonymous';
+        
+        logo.onload = () => {
+          // 在二维码中心绘制白色背景（给 logo 留出空间）
+          const logoX = (qrSize - logoSize) / 2;
+          const logoY = (qrSize - logoSize) / 2;
+          const padding = 4;
+          
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(logoX - padding, logoY - padding, logoSize + padding * 2, logoSize + padding * 2);
+          
+          // 绘制 Logo
+          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+          
+          // 转换为 PNG 并下载
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const link = document.createElement('a');
+              link.download = `trace-qr-${product?.id || 'code'}-${timestamp}.png`;
+              link.href = URL.createObjectURL(blob);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              
+              Toast.clear();
+              Toast.show({ content: '二维码已保存', icon: 'success' });
+            } else {
+              Toast.clear();
+              Toast.show({ content: '生成失败', icon: 'fail' });
+            }
+            URL.revokeObjectURL(svgUrl);
+          });
+        };
+        
+        logo.onerror = () => {
+          // 如果 Logo 加载失败，仍然保存没有 Logo 的二维码
+          console.warn('Logo 加载失败，保存无 Logo 二维码');
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const link = document.createElement('a');
+              link.download = `trace-qr-${product?.id || 'code'}-${timestamp}.png`;
+              link.href = URL.createObjectURL(blob);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              
+              Toast.clear();
+              Toast.show({ content: '二维码已保存（无Logo）', icon: 'success' });
+            }
+            URL.revokeObjectURL(svgUrl);
+          });
+        };
+        
+        logo.src = fishLogo;
       };
 
-      img.src = url;
+      qrImage.onerror = () => {
+        clearTimeout(loadTimeout);
+        URL.revokeObjectURL(svgUrl);
+        Toast.clear();
+        Toast.show({ content: '二维码加载失败', icon: 'fail' });
+      };
+
+      qrImage.src = svgUrl;
     } catch (err) {
-      console.error(err);
+      console.error('下载错误:', err);
       Toast.clear();
-      Toast.show({ content: '保存失败', icon: 'fail' });
+      Toast.show({ content: '保存失败，请重试', icon: 'fail' });
     }
   };
 
@@ -167,7 +215,7 @@ const QRCodeModal = ({ visible, onClose, product }) => {
                 size={220}
                 level="H"
                 imageSettings={{
-                  src: "/fish.png",
+                  src: fishLogo,
                   x: undefined,
                   y: undefined,
                   height: 40,

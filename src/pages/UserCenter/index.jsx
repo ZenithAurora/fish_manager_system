@@ -78,7 +78,7 @@ const UserCenter = () => {
   const handleMenuClick = (menu) => {
     switch (menu) {
       case 'orders':
-        navigate('/order-history');
+        navigate('/orderHistory');
         break;
       case 'trace':
         navigate('/trace-history');
@@ -174,24 +174,17 @@ const UserCenter = () => {
             </div>
             <span className="menu-text">我的收藏</span>
           </div>
-          <div className="menu-item" onClick={() => handleMenuClick('settings')}>
-            <div className="menu-icon settings">
-              <SetOutline />
+          <div className="menu-item" onClick={() => handleMenuClick('address')}>
+            <div className="menu-icon address">
+              <EnvironmentOutline />
             </div>
-            <span className="menu-text">设置</span>
+            <span className="menu-text">收货地址</span>
           </div>
         </div>
       </div>
 
       {/* 其他功能列表 */}
       <div className="list-section">
-        <div className="list-item" onClick={() => handleMenuClick('address')}>
-          <div className="list-icon">
-            <EnvironmentOutline />
-          </div>
-          <span className="list-text">收货地址</span>
-          <RightOutline className="list-arrow" />
-        </div>
         <div className="list-item" onClick={() => handleMenuClick('notifications')}>
           <div className="list-icon">
             <BellOutline />
